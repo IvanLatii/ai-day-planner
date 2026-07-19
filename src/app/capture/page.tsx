@@ -77,7 +77,7 @@ export default function CapturePage() {
           ? "Розбираю..."
           : status === "error"
             ? "Спробувати ще раз"
-            : "Розібрати"}
+            : "Розібрати на задачі"}
       </button>
     </div>
   );

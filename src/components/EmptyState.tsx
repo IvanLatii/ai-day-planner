@@ -15,16 +15,16 @@ const CONTENT: Record<
   },
   "today-has-inbox": {
     emoji: "📥",
-    title: "У Inbox є задачі",
+    title: "У Вхідних є задачі",
     body: "Переглянь і підтверди — вони стануть планом на сьогодні.",
-    ctaLabel: "Перейти в Inbox",
+    ctaLabel: "Перейти у Вхідні",
     ctaHref: "/inbox",
   },
   "inbox-empty": {
     emoji: "✨",
-    title: "Inbox порожній",
+    title: "Вхідні порожні",
     body: "Скинь усе, що в голові, текстом — AI розбере на задачі.",
-    ctaLabel: "Capture",
+    ctaLabel: "Записати",
     ctaHref: "/capture",
   },
 };

@@ -22,7 +22,7 @@ export default function TodayPage() {
       </h1>
       {hasAnyTasks && inboxTasks.length > 0 && (
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          У Inbox ще {inboxTasks.length} задач{inboxTasks.length === 1 ? "а" : ""}{" "}
+          У Вхідних ще {inboxTasks.length} задач{inboxTasks.length === 1 ? "а" : ""}{" "}
           на розгляд.
         </p>
       )}

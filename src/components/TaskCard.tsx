@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { Task } from "@/lib/tasks/types";
 import { useTasks } from "@/lib/tasks/useTasks";
-import { formatDueDate, formatTimeEstimate } from "@/lib/tasks/format";
+import { capitalize, formatDueDate, formatTimeEstimate } from "@/lib/tasks/format";
 import { PriorityChip } from "./PriorityChip";
 
 function Badge({ children }: { children: React.ReactNode }) {
@@ -50,7 +50,7 @@ export function InboxTaskCard({ task }: { task: Task }) {
               </span>
             )}
             <span className="font-medium text-zinc-900 dark:text-zinc-50">
-              {task.title}
+              {capitalize(task.title)}
             </span>
           </div>
           {task.source_text && task.source_text !== task.title && (
@@ -144,7 +144,7 @@ export function TodayTaskCard({ task }: { task: Task }) {
 
       <div className="min-w-0 flex-1">
         <p className="truncate font-medium text-zinc-900 dark:text-zinc-50">
-          {task.title}
+          {capitalize(task.title)}
         </p>
         {task.time_estimate_min && (
           <p className="text-xs text-zinc-400 dark:text-zinc-500">
@@ -158,7 +158,7 @@ export function TodayTaskCard({ task }: { task: Task }) {
       <button
         type="button"
         onClick={() => returnToInbox(task.id)}
-        aria-label="Повернути в Inbox"
+        aria-label="Повернути у Вхідні"
         className="flex min-h-11 min-w-11 shrink-0 items-center justify-center text-lg text-zinc-400"
       >
         ↩
