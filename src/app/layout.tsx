@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Day Planner",
+  title: "Prism",
   description:
     "Вивали все, що в голові — AI розбере на задачі та план на сьогодні.",
 };
