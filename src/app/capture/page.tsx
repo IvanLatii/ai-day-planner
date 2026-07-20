@@ -184,7 +184,7 @@ export default function CapturePage() {
         type="button"
         onClick={handleSubmit}
         disabled={!canSubmit}
-        className="min-h-11 w-full rounded-full bg-zinc-900 text-sm font-semibold text-white transition-opacity disabled:opacity-40 dark:bg-zinc-50 dark:text-zinc-900"
+        className="mb-6 min-h-11 w-full rounded-full bg-zinc-900 text-sm font-semibold text-white transition-opacity disabled:opacity-40 dark:bg-zinc-50 dark:text-zinc-900"
       >
         {status === "loading"
           ? "Розбираю..."
