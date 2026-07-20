@@ -28,6 +28,14 @@ function voiceErrorMessage(reason: string): string {
   );
 }
 
+function BackIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
+    </svg>
+  );
+}
+
 function MicIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5">
@@ -62,6 +70,8 @@ export default function CapturePage() {
   const [text, setText] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [shake, setShake] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
 
   const handleTranscript = useCallback((chunk: string) => {
     setText((prev) => (prev ? `${prev} ${chunk}` : chunk));
@@ -76,8 +86,6 @@ export default function CapturePage() {
     error: voiceError,
   } = useVoiceDictation({ onTranscript: handleTranscript });
 
-  const canSubmit = text.trim().length > 0 && status !== "loading";
-
   function handleClear() {
     setText("");
     setStatus("idle");
@@ -85,7 +93,6 @@ export default function CapturePage() {
   }
 
   async function handleSubmit() {
-    if (!canSubmit) return;
     setStatus("loading");
     setError(null);
 
@@ -101,29 +108,59 @@ export default function CapturePage() {
     }
   }
 
+  function handleSubmitClick() {
+    if (status === "loading") return;
+
+    if (text.trim().length === 0) {
+      setShake(true);
+      setToast("Спершу напиши щось");
+      navigator.vibrate?.(150);
+      window.setTimeout(() => setShake(false), 400);
+      window.setTimeout(() => setToast(null), 2000);
+      return;
+    }
+
+    handleSubmit();
+  }
+
   return (
     <div className="flex flex-1 flex-col gap-4 px-4 py-6">
+      <button
+        type="button"
+        onClick={() => router.back()}
+        className="flex min-h-11 w-fit items-center gap-1 text-sm font-medium text-zinc-500 dark:text-zinc-400"
+      >
+        <BackIcon />
+        Назад
+      </button>
+
       <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
         Що в голові?
       </h1>
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">
-        Пиши все підряд — AI розбере на задачі.
-      </p>
 
-      <div className="relative flex flex-1 flex-col">
-        <textarea
-          value={text}
-          onChange={(e) => {
-            setText(e.target.value);
-            if (status === "error") setStatus("idle");
-          }}
-          placeholder="напр.: подзвонити бухгалтеру, купити молоко, до стоматолога на тижні..."
-          autoFocus
-          className="min-h-[35vh] flex-1 resize-none rounded-2xl border border-zinc-200 bg-white p-4 pr-28 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
-        />
+      <textarea
+        value={text}
+        onChange={(e) => {
+          setText(e.target.value);
+          if (status === "error") setStatus("idle");
+        }}
+        placeholder="наприклад: подзвонити бухгалтеру, купити молоко, до стоматолога на тижні..."
+        autoFocus
+        className="min-h-[35vh] flex-1 resize-none rounded-2xl border border-zinc-200 bg-white p-4 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
+      />
 
-        {(voiceSupported || text.length > 0) && (
-          <div className="absolute right-3 top-3 flex items-center gap-2">
+      {(voiceSupported || text.length > 0) && (
+        <div className="flex items-center justify-between">
+          <span className="flex items-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            {listening && (
+              <>
+                <span className="h-2 w-2 animate-pulse rounded-full bg-rose-500" />
+                Слухаю…
+              </>
+            )}
+          </span>
+
+          <div className="flex items-center gap-2">
             {listening ? (
               <button
                 type="button"
@@ -158,19 +195,15 @@ export default function CapturePage() {
               </>
             )}
           </div>
-        )}
-      </div>
-
-      {listening && (
-        <div className="flex items-center justify-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-          <span className="h-2 w-2 animate-pulse rounded-full bg-rose-500" />
-          Слухаю…
         </div>
       )}
 
       {voiceError && (
         <div className="rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:bg-rose-500/10 dark:text-rose-300">
-          {voiceErrorMessage(voiceError)}
+          {voiceErrorMessage(voiceError)}{" "}
+          {/* TEMPORARY DIAGNOSTIC (2026-07-20): remove once we know the real
+              failure mode on iPhone Safari. */}
+          <span className="opacity-70">Помилка: {voiceError}</span>
         </div>
       )}
 
@@ -180,11 +213,20 @@ export default function CapturePage() {
         </div>
       )}
 
+      {toast && (
+        <div className="flex justify-center">
+          <span className="rounded-full bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900">
+            {toast}
+          </span>
+        </div>
+      )}
+
       <button
         type="button"
-        onClick={handleSubmit}
-        disabled={!canSubmit}
-        className="mb-6 min-h-11 w-full rounded-full bg-zinc-900 text-sm font-semibold text-white transition-opacity disabled:opacity-40 dark:bg-zinc-50 dark:text-zinc-900"
+        onClick={handleSubmitClick}
+        className={`mb-6 min-h-11 w-full rounded-full bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
+          shake ? "animate-shake" : ""
+        }`}
       >
         {status === "loading"
           ? "Розбираю..."
