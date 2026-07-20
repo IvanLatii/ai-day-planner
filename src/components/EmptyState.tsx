@@ -1,48 +1,55 @@
 import Link from "next/link";
+import { InboxIcon, TodayIcon } from "./icons";
 
 type Variant = "today-new" | "today-has-inbox" | "inbox-empty";
 
 const CONTENT: Record<
   Variant,
-  { emoji: string; title: string; body: string; ctaLabel: string; ctaHref: string }
+  {
+    icon: React.ReactNode;
+    title: string;
+    body: string;
+    ctaLabel: string;
+    ctaHref: string;
+  }
 > = {
   "today-new": {
-    emoji: "🧠",
+    icon: <TodayIcon className="h-8 w-8" />,
     title: "Ще нічого немає",
-    body: "Вивали все, що в голові, — AI розбере на задачі за тебе.",
+    body: "Скинь усе, що в голові — AI розбере на задачі.",
     ctaLabel: "Записати",
     ctaHref: "/capture",
   },
   "today-has-inbox": {
-    emoji: "📥",
+    icon: <InboxIcon className="h-8 w-8" />,
     title: "У Вхідних є задачі",
     body: "Переглянь і підтверди — вони стануть планом на сьогодні.",
     ctaLabel: "Перейти у Вхідні",
     ctaHref: "/inbox",
   },
   "inbox-empty": {
-    emoji: "✨",
+    icon: <InboxIcon className="h-8 w-8" />,
     title: "Вхідні порожні",
-    body: "Скинь усе, що в голові, текстом — AI розбере на задачі.",
+    body: "Скинь усе, що в голові — AI розбере на задачі.",
     ctaLabel: "Записати",
     ctaHref: "/capture",
   },
 };
 
 export function EmptyState({ variant }: { variant: Variant }) {
-  const { emoji, title, body, ctaLabel, ctaHref } = CONTENT[variant];
+  const { icon, title, body, ctaLabel, ctaHref } = CONTENT[variant];
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-3 px-8 py-16 text-center">
-      <span className="text-4xl" aria-hidden>
-        {emoji}
-      </span>
-      <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+    <div className="flex flex-1 flex-col items-center justify-center px-8 py-16 text-center">
+      <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
+        {icon}
+      </div>
+      <h2 className="font-heading mb-2 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
         {title}
       </h2>
-      <p className="max-w-xs text-sm text-zinc-500 dark:text-zinc-400">{body}</p>
+      <p className="mb-5 max-w-xs text-sm text-zinc-500 dark:text-zinc-400">{body}</p>
       <Link
         href={ctaHref}
-        className="mt-2 flex min-h-11 items-center justify-center rounded-xl bg-zinc-900 px-6 text-sm font-medium text-white dark:bg-zinc-50 dark:text-zinc-900"
+        className="flex min-h-11 items-center justify-center rounded-xl bg-zinc-900 px-6 text-sm font-medium text-white dark:bg-zinc-50 dark:text-zinc-900"
       >
         {ctaLabel}
       </Link>
