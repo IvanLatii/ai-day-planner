@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { logVoice, logVoiceError } from "./debugLog";
 
 export interface UseVoiceDictationOptions {
   onTranscript: (text: string) => void;
@@ -65,10 +64,6 @@ export function useVoiceDictation({
   }, [onTranscript]);
 
   const stop = useCallback(() => {
-    // TEMPORARY DIAGNOSTIC (2026-07-20): confirm directly whether/when the
-    // Stop button's handler actually fires, rather than inferring it from
-    // manualStopRef inside onend.
-    logVoice("[voice] stop() called");
     manualStopRef.current = true;
     recognitionRef.current?.stop();
   }, []);
@@ -85,29 +80,11 @@ export function useVoiceDictation({
     recognition.continuous = true;
     recognition.interimResults = true;
 
-    // TEMPORARY DIAGNOSTIC (2026-07-20): full event trace to find out
-    // whether onresult ever fires at all during a real dictation attempt.
-    // Remove once the "listening but no text" report is diagnosed.
-    recognition.onstart = () => {
-      logVoice("[voice] onstart");
-    };
-
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      logVoice(
-        "[voice] onresult",
-        "idx:", event.resultIndex,
-        "len:", event.results.length
-      );
       abortRetriesRef.current = 0; // a working result means the connection is healthy
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
         const transcript = result[0].transcript;
-        logVoice(
-          "[voice] item", i,
-          "final:", result.isFinal,
-          "chars:", transcript.length,
-          transcript
-        );
         if (result.isFinal) {
           setInterimText("");
           onTranscriptRef.current(transcript.trim());
@@ -118,12 +95,6 @@ export function useVoiceDictation({
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      // TEMPORARY DIAGNOSTIC (2026-07-20): always log the raw error code so
-      // real device testing can tell us which failure mode actually happens
-      // on iPhone Safari, before deciding whether a MediaRecorder fallback is
-      // worth building. Remove this console line once that's known.
-      logVoiceError("[voice] error:", event.error, event.message);
-
       // A manual stop() can itself trigger an "aborted" error on some
       // browsers — that's the user's own request, not a failure, so it must
       // never trigger a retry or a banner. onend (below) finishes it cleanly.
@@ -144,13 +115,6 @@ export function useVoiceDictation({
     // Fires after onerror, and also when the browser silently ends
     // recognition on its own (common on iOS even with continuous:true).
     recognition.onend = () => {
-      logVoice(
-        "[voice] onend",
-        "superseded:", recognitionRef.current !== recognition,
-        "retry:", retryPendingRef.current,
-        "manualStop:", manualStopRef.current
-      );
-
       if (recognitionRef.current !== recognition) return; // superseded already
 
       if (retryPendingRef.current && !manualStopRef.current) {
@@ -166,7 +130,6 @@ export function useVoiceDictation({
     };
 
     recognitionRef.current = recognition;
-    logVoice("[voice] calling start()");
     recognition.start();
   }, []);
 

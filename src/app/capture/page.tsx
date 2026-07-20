@@ -4,7 +4,6 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { useVoiceDictation } from "@/lib/voice/useVoiceDictation";
-import { useVoiceDebugLog } from "@/lib/voice/debugLog";
 
 const ERROR_MESSAGES: Record<string, string> = {
   missing_api_key: "AI тимчасово недоступний (немає ключа). Спробуй пізніше.",
@@ -89,7 +88,6 @@ export default function CapturePage() {
   } = useVoiceDictation({ onTranscript: handleTranscript });
 
   const showInterim = listening && interimText.length > 0;
-  const voiceDebugLog = useVoiceDebugLog();
 
   function handleClear() {
     setText("");
@@ -215,26 +213,9 @@ export default function CapturePage() {
         </div>
       )}
 
-      {/* TEMPORARY DIAGNOSTIC (2026-07-20): on-screen voice log panel — no
-          Web Inspector needed to see [voice] events on a real phone. Remove
-          this block (and src/lib/voice/debugLog.ts) once diagnosed. */}
-      {voiceSupported && (
-        <div className="rounded-lg bg-black/85 p-2 font-mono text-[10px] leading-tight text-lime-400">
-          <div className="mb-1 text-zinc-400">🔧 voice debug (тимчасово)</div>
-          {voiceDebugLog.length === 0 ? (
-            <div className="text-zinc-500">(немає логів)</div>
-          ) : (
-            voiceDebugLog.map((line, i) => <div key={i}>{line}</div>)
-          )}
-        </div>
-      )}
-
       {voiceError && (
         <div className="rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:bg-rose-500/10 dark:text-rose-300">
-          {voiceErrorMessage(voiceError)}{" "}
-          {/* TEMPORARY DIAGNOSTIC (2026-07-20): remove once we know the real
-              failure mode on iPhone Safari. */}
-          <span className="opacity-70">Помилка: {voiceError}</span>
+          {voiceErrorMessage(voiceError)}
         </div>
       )}
 
