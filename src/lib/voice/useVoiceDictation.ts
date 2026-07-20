@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { logVoice, logVoiceError } from "./debugLog";
 
 export interface UseVoiceDictationOptions {
   onTranscript: (text: string) => void;
@@ -84,24 +85,24 @@ export function useVoiceDictation({
     // whether onresult ever fires at all during a real dictation attempt.
     // Remove once the "listening but no text" report is diagnosed.
     recognition.onstart = () => {
-      console.log("[voice] onstart");
+      logVoice("[voice] onstart");
     };
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      console.log(
+      logVoice(
         "[voice] onresult",
-        "resultIndex:", event.resultIndex,
-        "results.length:", event.results.length
+        "idx:", event.resultIndex,
+        "len:", event.results.length
       );
       abortRetriesRef.current = 0; // a working result means the connection is healthy
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
         const transcript = result[0].transcript;
-        console.log(
-          "[voice] onresult item", i,
-          "isFinal:", result.isFinal,
+        logVoice(
+          "[voice] item", i,
+          "final:", result.isFinal,
           "chars:", transcript.length,
-          "text:", transcript
+          transcript
         );
         if (result.isFinal) {
           setInterimText("");
@@ -117,7 +118,7 @@ export function useVoiceDictation({
       // real device testing can tell us which failure mode actually happens
       // on iPhone Safari, before deciding whether a MediaRecorder fallback is
       // worth building. Remove this console line once that's known.
-      console.error("[voice] SpeechRecognition error:", event.error, event.message);
+      logVoiceError("[voice] error:", event.error, event.message);
 
       // A manual stop() can itself trigger an "aborted" error on some
       // browsers — that's the user's own request, not a failure, so it must
@@ -139,10 +140,10 @@ export function useVoiceDictation({
     // Fires after onerror, and also when the browser silently ends
     // recognition on its own (common on iOS even with continuous:true).
     recognition.onend = () => {
-      console.log(
+      logVoice(
         "[voice] onend",
         "superseded:", recognitionRef.current !== recognition,
-        "retryPending:", retryPendingRef.current,
+        "retry:", retryPendingRef.current,
         "manualStop:", manualStopRef.current
       );
 
@@ -161,7 +162,7 @@ export function useVoiceDictation({
     };
 
     recognitionRef.current = recognition;
-    console.log("[voice] calling recognition.start()");
+    logVoice("[voice] calling start()");
     recognition.start();
   }, []);
 
