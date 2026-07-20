@@ -127,19 +127,21 @@ export default function CapturePage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 px-4 pb-2 pt-6">
-      <button
-        type="button"
-        onClick={() => router.back()}
-        className="flex min-h-11 w-fit items-center gap-1 text-sm font-medium text-zinc-500 dark:text-zinc-400"
-      >
-        <BackIcon />
-        Назад
-      </button>
+    <div className="flex flex-1 flex-col gap-4 px-4 pb-4 pt-6">
+      <div className="flex flex-col gap-1">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="flex min-h-11 w-fit items-center gap-1 text-sm font-medium text-zinc-500 dark:text-zinc-400"
+        >
+          <BackIcon />
+          Назад
+        </button>
 
-      <h1 className="font-heading text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-        Що в голові?
-      </h1>
+        <h1 className="font-heading text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+          Що в голові?
+        </h1>
+      </div>
 
       <div className="flex flex-1 flex-col">
         <textarea
@@ -150,14 +152,14 @@ export default function CapturePage() {
           }}
           placeholder="наприклад: подзвонити бухгалтеру, купити молоко, до стоматолога на тижні..."
           autoFocus
-          className={`min-h-[35vh] flex-1 resize-none border border-zinc-200 bg-white p-4 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 ${
-            showInterim ? "rounded-t-2xl border-b-0" : "rounded-2xl"
+          className={`min-h-[35vh] flex-1 resize-none border-none bg-zinc-100 p-4 text-base text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:bg-zinc-800 dark:text-zinc-50 dark:focus:ring-zinc-600 ${
+            showInterim ? "rounded-t-2xl" : "rounded-2xl"
           }`}
         />
         {showInterim && (
           <div
             aria-hidden
-            className="rounded-b-2xl border border-t-0 border-zinc-200 bg-white px-4 pb-3 text-base text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-600"
+            className="rounded-b-2xl bg-zinc-100 px-4 pb-3 text-base text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500"
           >
             {interimText}
           </div>
@@ -202,7 +204,7 @@ export default function CapturePage() {
                     type="button"
                     onClick={startVoice}
                     aria-label="Диктувати голосом"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zinc-900 text-white shadow-sm active:scale-95 dark:bg-zinc-50 dark:text-zinc-900"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-zinc-900 text-zinc-900 active:scale-95 dark:border-zinc-50 dark:text-zinc-50"
                   >
                     <MicIcon />
                   </button>
@@ -236,7 +238,7 @@ export default function CapturePage() {
       <button
         type="button"
         onClick={handleSubmitClick}
-        className={`min-h-11 w-full rounded-xl bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
+        className={`h-14 w-full rounded-xl bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
           shake ? "animate-shake" : ""
         }`}
       >
