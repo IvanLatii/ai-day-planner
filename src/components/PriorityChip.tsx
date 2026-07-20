@@ -3,6 +3,12 @@
 import type { Priority } from "@/lib/tasks/types";
 
 const LABEL: Record<Priority, string> = {
+  high: "P1",
+  medium: "P2",
+  low: "P3",
+};
+
+const FULL_LABEL: Record<Priority, string> = {
   high: "Високий",
   medium: "Середній",
   low: "Низький",
@@ -25,10 +31,14 @@ export function PriorityChip({
     <button
       type="button"
       onClick={onClick}
-      className={`min-h-11 shrink-0 rounded-xl px-3 text-sm font-medium transition-colors active:scale-95 ${STYLE[priority]}`}
-      aria-label={`Пріоритет: ${LABEL[priority]}. Тап, щоб змінити.`}
+      aria-label={`Пріоритет: ${FULL_LABEL[priority]}. Тап, щоб змінити.`}
+      className="flex min-h-11 min-w-11 shrink-0 items-center justify-center active:scale-95"
     >
-      {LABEL[priority]}
+      <span
+        className={`flex h-7 w-7 items-center justify-center rounded-lg text-xs font-bold transition-colors ${STYLE[priority]}`}
+      >
+        {LABEL[priority]}
+      </span>
     </button>
   );
 }

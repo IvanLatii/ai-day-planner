@@ -6,6 +6,15 @@ import { useTasks } from "@/lib/tasks/useTasks";
 import { capitalize, formatDueDate, formatTimeEstimate } from "@/lib/tasks/format";
 import { PriorityChip } from "./PriorityChip";
 
+function ReturnIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 14 4 9l5-5" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
+    </svg>
+  );
+}
+
 function Badge({ children }: { children: React.ReactNode }) {
   return (
     <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
@@ -43,15 +52,13 @@ export function InboxTaskCard({ task }: { task: Task }) {
           className="min-h-11 flex-1 text-left"
           onClick={() => setOpen((v) => !v)}
         >
-          <div className="flex items-center gap-2">
-            {task.unparsed && (
-              <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-700 dark:bg-orange-500/20 dark:text-orange-300">
-                перевір руками
-              </span>
-            )}
-            <span className="font-medium text-zinc-900 dark:text-zinc-50">
-              {capitalize(task.title)}
+          {task.unparsed && (
+            <span className="mb-1 inline-block rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-700 dark:bg-orange-500/20 dark:text-orange-300">
+              перевір руками
             </span>
+          )}
+          <div className="font-medium text-zinc-900 dark:text-zinc-50">
+            {capitalize(task.title)}
           </div>
           {task.source_text && task.source_text !== task.title && (
             <p className="mt-1 text-sm italic text-zinc-400 dark:text-zinc-500">
@@ -132,7 +139,7 @@ export function TodayTaskCard({ task }: { task: Task }) {
   const { cyclePriority, toggleDone, returnToInbox } = useTasks();
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+    <div className="flex items-center gap-2 rounded-2xl border border-zinc-200 bg-white py-4 pl-3 pr-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
       <button
         type="button"
         onClick={() => toggleDone(task.id)}
@@ -159,9 +166,9 @@ export function TodayTaskCard({ task }: { task: Task }) {
         type="button"
         onClick={() => returnToInbox(task.id)}
         aria-label="Повернути у Вхідні"
-        className="flex min-h-11 min-w-11 shrink-0 items-center justify-center text-lg text-zinc-400"
+        className="flex min-h-11 min-w-11 shrink-0 items-center justify-center text-zinc-400"
       >
-        ↩
+        <ReturnIcon />
       </button>
     </div>
   );
