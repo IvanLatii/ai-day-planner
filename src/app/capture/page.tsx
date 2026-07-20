@@ -48,11 +48,26 @@ function MicIcon() {
   );
 }
 
-function StopIcon() {
+function CheckIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
-      <rect x="6" y="6" width="12" height="12" rx="2" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-5 w-5">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
+  );
+}
+
+function WaveformIcon() {
+  const delays = ["0ms", "150ms", "300ms", "450ms"];
+  return (
+    <span className="flex h-3 items-end gap-0.5" aria-hidden>
+      {delays.map((delay) => (
+        <span
+          key={delay}
+          className="voice-wave-bar h-full w-0.5 rounded-full bg-rose-500"
+          style={{ animationDelay: delay }}
+        />
+      ))}
+    </span>
   );
 }
 
@@ -171,7 +186,7 @@ export default function CapturePage() {
           <span className="flex items-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400">
             {listening && (
               <>
-                <span className="h-2 w-2 animate-pulse rounded-full bg-rose-500" />
+                <WaveformIcon />
                 Слухаю…
               </>
             )}
@@ -182,10 +197,10 @@ export default function CapturePage() {
               <button
                 type="button"
                 onClick={stopVoice}
-                aria-label="Зупинити диктування"
+                aria-label="Завершити диктування"
                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zinc-700 text-white shadow-sm active:scale-95 dark:bg-zinc-300 dark:text-zinc-900"
               >
-                <StopIcon />
+                <CheckIcon />
               </button>
             ) : (
               <>

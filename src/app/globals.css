@@ -36,3 +36,13 @@ body {
 .animate-shake {
   animation: shake 0.4s ease-in-out;
 }
+
+@keyframes voice-wave {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+.voice-wave-bar {
+  animation: voice-wave 0.9s ease-in-out infinite;
+  transform-origin: center;
+}
