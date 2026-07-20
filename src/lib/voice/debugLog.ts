@@ -10,11 +10,19 @@ import { useSyncExternalStore } from "react";
 const MAX_LINES = 5;
 const EMPTY: string[] = [];
 
+// Page-load-relative timestamp on every line so gaps between events (e.g.
+// onstart -> error) are visible at a glance without cross-referencing.
+const loadTime = typeof performance !== "undefined" ? performance.now() : 0;
+
 let lines: string[] = EMPTY;
 const listeners = new Set<() => void>();
 
 function push(text: string) {
-  lines = [...lines.slice(-(MAX_LINES - 1)), text];
+  const elapsed =
+    typeof performance !== "undefined"
+      ? Math.round(performance.now() - loadTime)
+      : 0;
+  lines = [...lines.slice(-(MAX_LINES - 1)), `+${elapsed}ms ${text}`];
   listeners.forEach((listener) => listener());
 }
 

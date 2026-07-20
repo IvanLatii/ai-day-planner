@@ -65,6 +65,10 @@ export function useVoiceDictation({
   }, [onTranscript]);
 
   const stop = useCallback(() => {
+    // TEMPORARY DIAGNOSTIC (2026-07-20): confirm directly whether/when the
+    // Stop button's handler actually fires, rather than inferring it from
+    // manualStopRef inside onend.
+    logVoice("[voice] stop() called");
     manualStopRef.current = true;
     recognitionRef.current?.stop();
   }, []);
