@@ -80,15 +80,34 @@ export function useVoiceDictation({
     recognition.continuous = true;
     recognition.interimResults = true;
 
+    // TEMPORARY DIAGNOSTIC (2026-07-20): full event trace to find out
+    // whether onresult ever fires at all during a real dictation attempt.
+    // Remove once the "listening but no text" report is diagnosed.
+    recognition.onstart = () => {
+      console.log("[voice] onstart");
+    };
+
     recognition.onresult = (event: SpeechRecognitionEvent) => {
+      console.log(
+        "[voice] onresult",
+        "resultIndex:", event.resultIndex,
+        "results.length:", event.results.length
+      );
       abortRetriesRef.current = 0; // a working result means the connection is healthy
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
+        const transcript = result[0].transcript;
+        console.log(
+          "[voice] onresult item", i,
+          "isFinal:", result.isFinal,
+          "chars:", transcript.length,
+          "text:", transcript
+        );
         if (result.isFinal) {
           setInterimText("");
-          onTranscriptRef.current(result[0].transcript.trim());
+          onTranscriptRef.current(transcript.trim());
         } else {
-          setInterimText(result[0].transcript);
+          setInterimText(transcript);
         }
       }
     };
@@ -120,6 +139,13 @@ export function useVoiceDictation({
     // Fires after onerror, and also when the browser silently ends
     // recognition on its own (common on iOS even with continuous:true).
     recognition.onend = () => {
+      console.log(
+        "[voice] onend",
+        "superseded:", recognitionRef.current !== recognition,
+        "retryPending:", retryPendingRef.current,
+        "manualStop:", manualStopRef.current
+      );
+
       if (recognitionRef.current !== recognition) return; // superseded already
 
       if (retryPendingRef.current && !manualStopRef.current) {
@@ -135,6 +161,7 @@ export function useVoiceDictation({
     };
 
     recognitionRef.current = recognition;
+    console.log("[voice] calling recognition.start()");
     recognition.start();
   }, []);
 
