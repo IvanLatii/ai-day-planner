@@ -26,14 +26,14 @@ export default function InboxPage() {
         ))}
       </div>
 
-      <div className="fixed inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom))] z-10 flex justify-center pl-4 pr-24">
+      <div className="fixed inset-x-0 bottom-[calc(68px+env(safe-area-inset-bottom))] z-10 flex justify-center pl-4 pr-24">
         <button
           type="button"
           onClick={() => {
             startDay();
             router.push("/");
           }}
-          className="min-h-11 w-full max-w-sm rounded-full bg-zinc-900 text-sm font-semibold text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900"
+          className="min-h-11 w-full max-w-sm rounded-xl bg-zinc-900 text-sm font-semibold text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900"
         >
           Почати день
         </button>

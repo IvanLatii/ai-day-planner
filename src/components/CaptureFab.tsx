@@ -11,7 +11,7 @@ export function CaptureFab() {
     <Link
       href="/capture"
       aria-label="Записати нові задачі"
-      className="fixed bottom-[calc(76px+env(safe-area-inset-bottom))] right-5 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-2xl leading-none text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900"
+      className="fixed bottom-[calc(68px+env(safe-area-inset-bottom))] right-5 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900 text-2xl leading-none text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900"
     >
       +
     </Link>
