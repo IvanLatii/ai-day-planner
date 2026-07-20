@@ -55,7 +55,7 @@ export default function TodayPage() {
 
   return (
     <div className="flex flex-1 flex-col gap-3 px-4 py-6">
-      <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+      <h1 className="font-heading text-3xl font-bold text-zinc-900 dark:text-zinc-50">
         Сьогодні
       </h1>
       {hasAnyTasks && inboxTasks.length > 0 && (
