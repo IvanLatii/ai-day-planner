@@ -4,32 +4,58 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 
+function InboxIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-4 w-4">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 12h4l2 3h6l2-3h4" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M5.5 5.5 3 12v6a1.5 1.5 0 0 0 1.5 1.5h15a1.5 1.5 0 0 0 1.5-1.5v-6l-2.5-6.5A1.5 1.5 0 0 0 17.1 4H6.9a1.5 1.5 0 0 0-1.4 1.5Z"
+      />
+    </svg>
+  );
+}
+
+function TodayIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-4 w-4">
+      <rect x="3.5" y="4.5" width="17" height="16" rx="2" />
+      <path strokeLinecap="round" d="M8 3v3M16 3v3M3.5 9.5h17" />
+    </svg>
+  );
+}
+
 function TabLink({
   href,
   label,
+  icon,
   active,
   badge,
 }: {
   href: string;
   label: string;
+  icon: React.ReactNode;
   active: boolean;
   badge?: number;
 }) {
   return (
-    <Link
-      href={href}
-      className={`relative flex min-h-11 flex-1 flex-col items-center justify-center gap-0.5 text-sm font-medium ${
-        active
-          ? "text-zinc-900 dark:text-zinc-50"
-          : "text-zinc-400 dark:text-zinc-500"
-      }`}
-    >
-      {label}
-      {!!badge && badge > 0 && (
-        <span className="absolute right-1/3 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white">
-          {badge}
-        </span>
-      )}
+    <Link href={href} className="flex min-h-11 flex-1 items-center justify-center">
+      <span
+        className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+          active
+            ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
+            : "text-zinc-400 dark:text-zinc-500"
+        }`}
+      >
+        {icon}
+        {label}
+        {!!badge && badge > 0 && (
+          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white">
+            {badge}
+          </span>
+        )}
+      </span>
     </Link>
   );
 }
@@ -43,10 +69,11 @@ export function TabBar() {
       <TabLink
         href="/inbox"
         label="Вхідні"
+        icon={<InboxIcon />}
         active={pathname === "/inbox"}
         badge={inboxTasks.length}
       />
-      <TabLink href="/" label="Сьогодні" active={pathname === "/"} />
+      <TabLink href="/" label="Сьогодні" icon={<TodayIcon />} active={pathname === "/"} />
     </nav>
   );
 }
