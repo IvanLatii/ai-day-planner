@@ -48,6 +48,14 @@ function StopIcon() {
   );
 }
 
+function ClearIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
+      <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
 export default function CapturePage() {
   const { addFromCapture } = useTasks();
   const router = useRouter();
@@ -69,6 +77,12 @@ export default function CapturePage() {
   } = useVoiceDictation({ onTranscript: handleTranscript });
 
   const canSubmit = text.trim().length > 0 && status !== "loading";
+
+  function handleClear() {
+    setText("");
+    setStatus("idle");
+    setError(null);
+  }
 
   async function handleSubmit() {
     if (!canSubmit) return;
@@ -105,39 +119,54 @@ export default function CapturePage() {
           }}
           placeholder="напр.: подзвонити бухгалтеру, купити молоко, до стоматолога на тижні..."
           autoFocus
-          className="min-h-[35vh] flex-1 resize-none rounded-2xl border border-zinc-200 bg-white p-4 pr-16 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
+          className="min-h-[35vh] flex-1 resize-none rounded-2xl border border-zinc-200 bg-white p-4 pr-28 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
         />
 
-        {voiceSupported && (
+        {(voiceSupported || text.length > 0) && (
           <div className="absolute right-3 top-3 flex items-center gap-2">
             {listening ? (
-              <>
-                <span className="flex items-center gap-1.5 rounded-full bg-zinc-900/90 px-2.5 py-1 text-xs font-medium text-white dark:bg-zinc-50/90 dark:text-zinc-900">
-                  <span className="h-2 w-2 animate-pulse rounded-full bg-rose-500" />
-                  Слухаю…
-                </span>
-                <button
-                  type="button"
-                  onClick={stopVoice}
-                  aria-label="Зупинити диктування"
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-rose-600 text-white shadow-sm active:scale-95"
-                >
-                  <StopIcon />
-                </button>
-              </>
-            ) : (
               <button
                 type="button"
-                onClick={startVoice}
-                aria-label="Диктувати голосом"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 shadow-sm active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+                onClick={stopVoice}
+                aria-label="Зупинити диктування"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-zinc-700 text-white shadow-sm active:scale-95 dark:bg-zinc-300 dark:text-zinc-900"
               >
-                <MicIcon />
+                <StopIcon />
               </button>
+            ) : (
+              <>
+                {text.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleClear}
+                    aria-label="Очистити поле"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 shadow-sm active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+                  >
+                    <ClearIcon />
+                  </button>
+                )}
+                {voiceSupported && (
+                  <button
+                    type="button"
+                    onClick={startVoice}
+                    aria-label="Диктувати голосом"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-white shadow-sm active:scale-95 dark:bg-zinc-50 dark:text-zinc-900"
+                  >
+                    <MicIcon />
+                  </button>
+                )}
+              </>
             )}
           </div>
         )}
       </div>
+
+      {listening && (
+        <div className="flex items-center justify-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+          <span className="h-2 w-2 animate-pulse rounded-full bg-rose-500" />
+          Слухаю…
+        </div>
+      )}
 
       {voiceError && (
         <div className="rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:bg-rose-500/10 dark:text-rose-300">
