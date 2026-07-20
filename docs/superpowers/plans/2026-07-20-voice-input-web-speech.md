@@ -113,7 +113,7 @@ declare global {
 ```typescript
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 export interface UseVoiceDictationOptions {
   onTranscript: (text: string) => void;
@@ -135,12 +135,29 @@ function getSpeechRecognitionCtor(): SpeechRecognitionConstructor | null {
   return window.SpeechRecognition ?? window.webkitSpeechRecognition ?? null;
 }
 
+// Browser support never changes after load, so subscribe is a no-op — this
+// only exists to give the server a stable snapshot (false) that differs from
+// the client's real one without React flagging a hydration mismatch.
+function subscribeToSupport() {
+  return () => {};
+}
+function getSupportSnapshot(): boolean {
+  return getSpeechRecognitionCtor() !== null;
+}
+function getServerSupportSnapshot(): boolean {
+  return false;
+}
+
 export function useVoiceDictation({
   onTranscript,
 }: UseVoiceDictationOptions): UseVoiceDictationResult {
   const [listening, setListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [supported] = useState(() => getSpeechRecognitionCtor() !== null);
+  const supported = useSyncExternalStore(
+    subscribeToSupport,
+    getSupportSnapshot,
+    getServerSupportSnapshot
+  );
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const stop = useCallback(() => {
