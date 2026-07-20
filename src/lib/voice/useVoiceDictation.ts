@@ -71,6 +71,11 @@ export function useVoiceDictation({
     };
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+      // TEMPORARY DIAGNOSTIC (2026-07-20): always log the raw error code so
+      // real device testing can tell us which failure mode actually happens
+      // on iPhone Safari, before deciding whether a MediaRecorder fallback is
+      // worth building. Remove this console line once that's known.
+      console.error("[voice] SpeechRecognition error:", event.error, event.message);
       if (!SILENT_ERRORS.has(event.error)) {
         setError(event.error);
       }
