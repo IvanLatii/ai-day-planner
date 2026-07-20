@@ -10,7 +10,7 @@ const CONTENT: Record<
     emoji: "🧠",
     title: "Ще нічого немає",
     body: "Вивали все, що в голові, — AI розбере на задачі за тебе.",
-    ctaLabel: "Почати",
+    ctaLabel: "Записати",
     ctaHref: "/capture",
   },
   "today-has-inbox": {
