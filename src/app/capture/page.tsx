@@ -81,10 +81,13 @@ export default function CapturePage() {
   const {
     supported: voiceSupported,
     listening,
+    interimText,
     start: startVoice,
     stop: stopVoice,
     error: voiceError,
   } = useVoiceDictation({ onTranscript: handleTranscript });
+
+  const showInterim = listening && interimText.length > 0;
 
   function handleClear() {
     setText("");
@@ -138,16 +141,28 @@ export default function CapturePage() {
         Що в голові?
       </h1>
 
-      <textarea
-        value={text}
-        onChange={(e) => {
-          setText(e.target.value);
-          if (status === "error") setStatus("idle");
-        }}
-        placeholder="наприклад: подзвонити бухгалтеру, купити молоко, до стоматолога на тижні..."
-        autoFocus
-        className="min-h-[35vh] flex-1 resize-none rounded-2xl border border-zinc-200 bg-white p-4 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
-      />
+      <div className="flex flex-1 flex-col">
+        <textarea
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value);
+            if (status === "error") setStatus("idle");
+          }}
+          placeholder="наприклад: подзвонити бухгалтеру, купити молоко, до стоматолога на тижні..."
+          autoFocus
+          className={`min-h-[35vh] flex-1 resize-none border border-zinc-200 bg-white p-4 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 ${
+            showInterim ? "rounded-t-2xl border-b-0" : "rounded-2xl"
+          }`}
+        />
+        {showInterim && (
+          <div
+            aria-hidden
+            className="rounded-b-2xl border border-t-0 border-zinc-200 bg-white px-4 pb-3 text-base text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-600"
+          >
+            {interimText}
+          </div>
+        )}
+      </div>
 
       {(voiceSupported || text.length > 0) && (
         <div className="flex items-center justify-between">

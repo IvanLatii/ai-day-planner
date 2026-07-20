@@ -9,6 +9,7 @@ export interface UseVoiceDictationOptions {
 export interface UseVoiceDictationResult {
   supported: boolean;
   listening: boolean;
+  interimText: string;
   start: () => void;
   stop: () => void;
   error: string | null;
@@ -16,6 +17,11 @@ export interface UseVoiceDictationResult {
 
 // Errors that just mean "nothing was said" — not worth surfacing to the user.
 const SILENT_ERRORS = new Set(["no-speech"]);
+
+// "aborted" fires spuriously on some browsers/devices mid-session even though
+// the user never asked to stop — worth a few silent retries before we bother
+// them with an error banner.
+const MAX_ABORT_RETRIES = 3;
 
 function getSpeechRecognitionCtor(): SpeechRecognitionConstructor | null {
   if (typeof window === "undefined") return null;
@@ -39,6 +45,7 @@ export function useVoiceDictation({
   onTranscript,
 }: UseVoiceDictationOptions): UseVoiceDictationResult {
   const [listening, setListening] = useState(false);
+  const [interimText, setInterimText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const supported = useSyncExternalStore(
     subscribeToSupport,
@@ -46,26 +53,40 @@ export function useVoiceDictation({
     getServerSupportSnapshot
   );
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const abortRetriesRef = useRef(0);
+  const retryPendingRef = useRef(false);
+  const onTranscriptRef = useRef(onTranscript);
+  const beginSessionRef = useRef<() => void>(() => {});
+
+  useEffect(() => {
+    onTranscriptRef.current = onTranscript;
+  }, [onTranscript]);
 
   const stop = useCallback(() => {
     recognitionRef.current?.stop();
   }, []);
 
-  const start = useCallback(() => {
+  // Creates and starts one recognition attempt. Called for the initial
+  // start() and, silently, for each aborted-retry — the caller decides
+  // whether `listening`/retry counters get reset.
+  const beginSession = useCallback(() => {
     const Ctor = getSpeechRecognitionCtor();
     if (!Ctor) return;
 
-    setError(null);
     const recognition = new Ctor();
     recognition.lang = "uk-UA";
     recognition.continuous = true;
     recognition.interimResults = true;
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
+      abortRetriesRef.current = 0; // a working result means the connection is healthy
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
         if (result.isFinal) {
-          onTranscript(result[0].transcript.trim());
+          setInterimText("");
+          onTranscriptRef.current(result[0].transcript.trim());
+        } else {
+          setInterimText(result[0].transcript);
         }
       }
     };
@@ -76,23 +97,51 @@ export function useVoiceDictation({
       // on iPhone Safari, before deciding whether a MediaRecorder fallback is
       // worth building. Remove this console line once that's known.
       console.error("[voice] SpeechRecognition error:", event.error, event.message);
+
+      if (event.error === "aborted" && abortRetriesRef.current < MAX_ABORT_RETRIES) {
+        abortRetriesRef.current += 1;
+        retryPendingRef.current = true;
+        return; // stay silent — onend (below) does the actual restart
+      }
+
+      retryPendingRef.current = false;
       if (!SILENT_ERRORS.has(event.error)) {
         setError(event.error);
       }
-      setListening(false);
     };
 
-    // Fires on explicit stop() AND when the browser silently ends recognition on
-    // its own (common on iOS even with continuous:true) — both cases must drop
-    // us back to idle, or the mic button gets stuck showing "Слухаю…".
+    // Fires after onerror, and also when the browser silently ends
+    // recognition on its own (common on iOS even with continuous:true).
     recognition.onend = () => {
+      if (recognitionRef.current !== recognition) return; // superseded already
+
+      if (retryPendingRef.current) {
+        retryPendingRef.current = false;
+        beginSessionRef.current(); // silent retry — `listening` stays true throughout
+        return;
+      }
+
+      setInterimText("");
       setListening(false);
     };
 
     recognitionRef.current = recognition;
     recognition.start();
+  }, []);
+
+  useEffect(() => {
+    beginSessionRef.current = beginSession;
+  }, [beginSession]);
+
+  const start = useCallback(() => {
+    if (!getSpeechRecognitionCtor()) return;
+    setError(null);
+    setInterimText("");
+    abortRetriesRef.current = 0;
+    retryPendingRef.current = false;
+    beginSession();
     setListening(true);
-  }, [onTranscript]);
+  }, [beginSession]);
 
   useEffect(() => {
     return () => {
@@ -100,5 +149,5 @@ export function useVoiceDictation({
     };
   }, []);
 
-  return { supported, listening, start, stop, error };
+  return { supported, listening, interimText, start, stop, error };
 }
