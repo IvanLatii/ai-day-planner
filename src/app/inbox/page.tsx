@@ -26,7 +26,7 @@ export default function InboxPage() {
         ))}
       </div>
 
-      <div className="fixed inset-x-0 bottom-20 z-10 flex justify-center pl-4 pr-24">
+      <div className="fixed inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom))] z-10 flex justify-center pl-4 pr-24">
         <button
           type="button"
           onClick={() => {
