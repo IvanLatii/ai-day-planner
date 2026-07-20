@@ -3,9 +3,9 @@
 import type { Priority } from "@/lib/tasks/types";
 
 const LABEL: Record<Priority, string> = {
-  high: "P1",
-  medium: "P2",
-  low: "P3",
+  high: "П1",
+  medium: "П2",
+  low: "П3",
 };
 
 const FULL_LABEL: Record<Priority, string> = {

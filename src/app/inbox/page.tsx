@@ -20,7 +20,7 @@ export default function InboxPage() {
       <h1 className="font-heading text-3xl font-bold text-zinc-900 dark:text-zinc-50">
         Вхідні
       </h1>
-      <div className="flex flex-col gap-2 pb-20">
+      <div className="flex flex-col divide-y divide-zinc-100 pb-20 dark:divide-zinc-800">
         {inboxTasks.map((task) => (
           <InboxTaskCard key={task.id} task={task} />
         ))}

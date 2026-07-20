@@ -5,6 +5,7 @@ import type { Task } from "@/lib/tasks/types";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { capitalize, formatDueDate, formatTimeEstimate } from "@/lib/tasks/format";
 import { PriorityChip } from "./PriorityChip";
+import { TodayIcon, ClockIcon } from "./icons";
 
 function ReturnIcon() {
   return (
@@ -15,28 +16,30 @@ function ReturnIcon() {
   );
 }
 
-function Badge({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-      {children}
-    </span>
-  );
-}
-
-function MetaBadges({ task }: { task: Task }) {
+// Compact single-line meta row (date/time/tags) with small icons — replaces
+// the old wrapped colored-pill badges, which took up too much vertical space.
+function TaskMeta({ task }: { task: Task }) {
   if (!task.due_date && !task.time_estimate_min && task.tags.length === 0) {
     return null;
   }
   return (
-    <div className="flex flex-wrap gap-1.5">
-      {task.due_date && <Badge>{formatDueDate(task.due_date)}</Badge>}
+    <p className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs text-zinc-400 dark:text-zinc-500">
+      {task.due_date && (
+        <span className="flex items-center gap-1">
+          <TodayIcon className="h-3 w-3" />
+          {formatDueDate(task.due_date)}
+        </span>
+      )}
       {task.time_estimate_min && (
-        <Badge>{formatTimeEstimate(task.time_estimate_min)}</Badge>
+        <span className="flex items-center gap-1">
+          <ClockIcon />
+          {formatTimeEstimate(task.time_estimate_min)}
+        </span>
       )}
       {task.tags.map((tag) => (
-        <Badge key={tag}>#{tag}</Badge>
+        <span key={tag}>#{tag}</span>
       ))}
-    </div>
+    </p>
   );
 }
 
@@ -45,11 +48,11 @@ export function InboxTaskCard({ task }: { task: Task }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-      <div className="flex items-start gap-3">
+    <div className="py-3">
+      <div className="flex items-start gap-2">
         <button
           type="button"
-          className="min-h-11 flex-1 text-left"
+          className="min-h-11 min-w-0 flex-1 text-left"
           onClick={() => setOpen((v) => !v)}
         >
           {task.unparsed && (
@@ -65,12 +68,9 @@ export function InboxTaskCard({ task }: { task: Task }) {
               &ldquo;{task.source_text}&rdquo;
             </p>
           )}
+          <TaskMeta task={task} />
         </button>
         <PriorityChip priority={task.priority} onClick={() => cyclePriority(task.id)} />
-      </div>
-
-      <div className="mt-2">
-        <MetaBadges task={task} />
       </div>
 
       {open && (
@@ -145,7 +145,7 @@ export function TodayTaskCard({
   const { cyclePriority, toggleDone, returnToInbox } = useTasks();
 
   return (
-    <div className="flex items-center gap-2 rounded-2xl border border-zinc-200 bg-white py-4 pl-3 pr-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+    <div className="flex items-center gap-1.5 py-3">
       <button
         type="button"
         onClick={() => {
@@ -162,23 +162,21 @@ export function TodayTaskCard({
         <p className="truncate font-medium text-zinc-900 dark:text-zinc-50">
           {capitalize(task.title)}
         </p>
-        {task.time_estimate_min && (
-          <p className="text-xs text-zinc-400 dark:text-zinc-500">
-            {formatTimeEstimate(task.time_estimate_min)}
-          </p>
-        )}
+        <TaskMeta task={task} />
       </div>
 
-      <PriorityChip priority={task.priority} onClick={() => cyclePriority(task.id)} />
+      <div className="flex items-center gap-1">
+        <PriorityChip priority={task.priority} onClick={() => cyclePriority(task.id)} />
 
-      <button
-        type="button"
-        onClick={() => returnToInbox(task.id)}
-        aria-label="Повернути у Вхідні"
-        className="flex min-h-11 min-w-11 shrink-0 items-center justify-center text-zinc-400"
-      >
-        <ReturnIcon />
-      </button>
+        <button
+          type="button"
+          onClick={() => returnToInbox(task.id)}
+          aria-label="Повернути у Вхідні"
+          className="flex min-h-11 min-w-11 shrink-0 items-center justify-center text-zinc-400"
+        >
+          <ReturnIcon />
+        </button>
+      </div>
     </div>
   );
 }
