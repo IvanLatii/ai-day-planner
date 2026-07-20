@@ -40,9 +40,9 @@ function TabLink({
   badge?: number;
 }) {
   return (
-    <Link href={href} className="flex min-h-11 flex-1 items-center justify-center">
+    <Link href={href} className="flex h-14 flex-1 items-center p-1.5">
       <span
-        className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+        className={`flex h-full w-full items-center justify-center gap-1.5 rounded-md text-sm font-medium transition-colors ${
           active
             ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
             : "text-zinc-400 dark:text-zinc-500"
