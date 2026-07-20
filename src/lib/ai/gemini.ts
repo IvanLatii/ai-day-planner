@@ -3,7 +3,7 @@ import type { AIProvider } from "./types";
 import { AIProviderError } from "./types";
 import { buildPrompt } from "./prompt";
 
-const MODEL = "gemini-3.5-flash";
+const MODEL = "gemini-3.1-flash-lite-preview";
 const TIMEOUT_MS = 15000;
 
 const responseSchema = {
