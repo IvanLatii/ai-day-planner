@@ -135,14 +135,23 @@ export function InboxTaskCard({ task }: { task: Task }) {
   );
 }
 
-export function TodayTaskCard({ task }: { task: Task }) {
+export function TodayTaskCard({
+  task,
+  onDone,
+}: {
+  task: Task;
+  onDone?: (task: Task) => void;
+}) {
   const { cyclePriority, toggleDone, returnToInbox } = useTasks();
 
   return (
     <div className="flex items-center gap-2 rounded-2xl border border-zinc-200 bg-white py-4 pl-3 pr-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
       <button
         type="button"
-        onClick={() => toggleDone(task.id)}
+        onClick={() => {
+          toggleDone(task.id);
+          onDone?.(task);
+        }}
         aria-label="Позначити виконаною"
         className="flex min-h-11 min-w-11 shrink-0 items-center justify-center"
       >
