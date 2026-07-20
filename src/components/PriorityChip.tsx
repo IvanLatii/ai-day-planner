@@ -25,7 +25,7 @@ export function PriorityChip({
     <button
       type="button"
       onClick={onClick}
-      className={`min-h-11 shrink-0 rounded-full px-3 text-sm font-medium transition-colors active:scale-95 ${STYLE[priority]}`}
+      className={`min-h-11 shrink-0 rounded-xl px-3 text-sm font-medium transition-colors active:scale-95 ${STYLE[priority]}`}
       aria-label={`Пріоритет: ${LABEL[priority]}. Тап, щоб змінити.`}
     >
       {LABEL[priority]}

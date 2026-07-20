@@ -127,7 +127,7 @@ export default function CapturePage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 px-4 py-6">
+    <div className="flex flex-1 flex-col gap-4 px-4 pb-2 pt-6">
       <button
         type="button"
         onClick={() => router.back()}
@@ -181,7 +181,7 @@ export default function CapturePage() {
                 type="button"
                 onClick={stopVoice}
                 aria-label="Зупинити диктування"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-zinc-700 text-white shadow-sm active:scale-95 dark:bg-zinc-300 dark:text-zinc-900"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zinc-700 text-white shadow-sm active:scale-95 dark:bg-zinc-300 dark:text-zinc-900"
               >
                 <StopIcon />
               </button>
@@ -192,7 +192,7 @@ export default function CapturePage() {
                     type="button"
                     onClick={handleClear}
                     aria-label="Очистити поле"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 shadow-sm active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-600 shadow-sm active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
                   >
                     <ClearIcon />
                   </button>
@@ -202,7 +202,7 @@ export default function CapturePage() {
                     type="button"
                     onClick={startVoice}
                     aria-label="Диктувати голосом"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-white shadow-sm active:scale-95 dark:bg-zinc-50 dark:text-zinc-900"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zinc-900 text-white shadow-sm active:scale-95 dark:bg-zinc-50 dark:text-zinc-900"
                   >
                     <MicIcon />
                   </button>
@@ -239,7 +239,7 @@ export default function CapturePage() {
       <button
         type="button"
         onClick={handleSubmitClick}
-        className={`mb-6 min-h-11 w-full rounded-full bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
+        className={`min-h-11 w-full rounded-xl bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
           shake ? "animate-shake" : ""
         }`}
       >

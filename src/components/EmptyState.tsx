@@ -42,7 +42,7 @@ export function EmptyState({ variant }: { variant: Variant }) {
       <p className="max-w-xs text-sm text-zinc-500 dark:text-zinc-400">{body}</p>
       <Link
         href={ctaHref}
-        className="mt-2 flex min-h-11 items-center justify-center rounded-full bg-zinc-900 px-6 text-sm font-medium text-white dark:bg-zinc-50 dark:text-zinc-900"
+        className="mt-2 flex min-h-11 items-center justify-center rounded-xl bg-zinc-900 px-6 text-sm font-medium text-white dark:bg-zinc-50 dark:text-zinc-900"
       >
         {ctaLabel}
       </Link>
