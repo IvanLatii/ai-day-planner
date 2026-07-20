@@ -78,7 +78,7 @@ export function InboxTaskCard({ task }: { task: Task }) {
             />
           </label>
           <div className="flex gap-2">
-            <label className="block flex-1 text-xs text-zinc-500">
+            <label className="block min-w-0 flex-1 text-xs text-zinc-500">
               Дедлайн
               <input
                 type="date"
@@ -86,10 +86,10 @@ export function InboxTaskCard({ task }: { task: Task }) {
                 onChange={(e) =>
                   updateTask(task.id, { due_date: e.target.value || undefined })
                 }
-                className="mt-1 min-h-11 w-full rounded-lg border border-zinc-200 px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"
+                className="mt-1 min-h-11 w-full min-w-0 rounded-lg border border-zinc-200 px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"
               />
             </label>
-            <label className="block flex-1 text-xs text-zinc-500">
+            <label className="block min-w-0 flex-1 text-xs text-zinc-500">
               Хвилин
               <input
                 type="number"
@@ -102,7 +102,7 @@ export function InboxTaskCard({ task }: { task: Task }) {
                       : undefined,
                   })
                 }
-                className="mt-1 min-h-11 w-full rounded-lg border border-zinc-200 px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"
+                className="mt-1 min-h-11 w-full min-w-0 rounded-lg border border-zinc-200 px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"
               />
             </label>
           </div>
