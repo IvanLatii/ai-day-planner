@@ -35,7 +35,7 @@ export default function InboxPage() {
           }}
           className="min-h-11 w-full max-w-sm rounded-xl bg-zinc-900 text-sm font-semibold text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900"
         >
-          Почати день
+          Підтвердити задачі
         </button>
       </div>
     </div>
