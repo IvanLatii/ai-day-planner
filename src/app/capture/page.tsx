@@ -93,8 +93,7 @@ export default function CapturePage() {
         Що в голові?
       </h1>
       <p className="text-sm text-zinc-500 dark:text-zinc-400">
-        Пиши все підряд, як думається — сьогодні, на тиждень, будь-коли. AI
-        розбере на задачі.
+        Пиши все підряд — AI розбере на задачі.
       </p>
 
       <div className="relative flex flex-1 flex-col">
@@ -104,7 +103,7 @@ export default function CapturePage() {
             setText(e.target.value);
             if (status === "error") setStatus("idle");
           }}
-          placeholder="напр.: терміново подзвонити бухгалтеру до обіду, купити молоко, десь на тижні до стоматолога..."
+          placeholder="напр.: подзвонити бухгалтеру, купити молоко, до стоматолога на тижні..."
           autoFocus
           className="min-h-[35vh] flex-1 resize-none rounded-2xl border border-zinc-200 bg-white p-4 pr-16 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
         />
