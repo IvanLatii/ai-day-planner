@@ -55,6 +55,7 @@ export function useVoiceDictation({
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const abortRetriesRef = useRef(0);
   const retryPendingRef = useRef(false);
+  const manualStopRef = useRef(false);
   const onTranscriptRef = useRef(onTranscript);
   const beginSessionRef = useRef<() => void>(() => {});
 
@@ -63,6 +64,7 @@ export function useVoiceDictation({
   }, [onTranscript]);
 
   const stop = useCallback(() => {
+    manualStopRef.current = true;
     recognitionRef.current?.stop();
   }, []);
 
@@ -98,6 +100,11 @@ export function useVoiceDictation({
       // worth building. Remove this console line once that's known.
       console.error("[voice] SpeechRecognition error:", event.error, event.message);
 
+      // A manual stop() can itself trigger an "aborted" error on some
+      // browsers — that's the user's own request, not a failure, so it must
+      // never trigger a retry or a banner. onend (below) finishes it cleanly.
+      if (manualStopRef.current) return;
+
       if (event.error === "aborted" && abortRetriesRef.current < MAX_ABORT_RETRIES) {
         abortRetriesRef.current += 1;
         retryPendingRef.current = true;
@@ -115,12 +122,14 @@ export function useVoiceDictation({
     recognition.onend = () => {
       if (recognitionRef.current !== recognition) return; // superseded already
 
-      if (retryPendingRef.current) {
+      if (retryPendingRef.current && !manualStopRef.current) {
         retryPendingRef.current = false;
         beginSessionRef.current(); // silent retry — `listening` stays true throughout
         return;
       }
 
+      retryPendingRef.current = false;
+      manualStopRef.current = false;
       setInterimText("");
       setListening(false);
     };
@@ -139,6 +148,7 @@ export function useVoiceDictation({
     setInterimText("");
     abortRetriesRef.current = 0;
     retryPendingRef.current = false;
+    manualStopRef.current = false;
     beginSession();
     setListening(true);
   }, [beginSession]);
