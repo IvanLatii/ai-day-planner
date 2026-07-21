@@ -23,6 +23,18 @@ export function formatTodayParts(date: Date = new Date()): { date: string; weekd
   return { date: datePart, weekday: capitalize(weekday) };
 }
 
+function todayISODate(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+export function isOverdue(dueDateIso: string): boolean {
+  return dueDateIso < todayISODate();
+}
+
 export function formatTimeEstimate(min: number): string {
   if (min < 60) return `${min} хв`;
   const h = Math.floor(min / 60);

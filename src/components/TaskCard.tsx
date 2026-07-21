@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Task } from "@/lib/tasks/types";
 import { useTasks } from "@/lib/tasks/useTasks";
-import { capitalize, formatDueDate, formatTimeEstimate } from "@/lib/tasks/format";
+import { capitalize, formatDueDate, formatTimeEstimate, isOverdue } from "@/lib/tasks/format";
 import { PriorityChip, PRIORITY_CHECKBOX_BORDER } from "./PriorityChip";
 import { TodayIcon, ClockIcon } from "./icons";
 
@@ -104,7 +104,13 @@ function TaskMeta({ task }: { task: Task }) {
   return (
     <p className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs text-zinc-400 dark:text-zinc-500">
       {task.due_date && (
-        <span className="flex items-center gap-1">
+        <span
+          className={`flex items-center gap-1 ${
+            task.status !== "done" && isOverdue(task.due_date)
+              ? "text-rose-500 dark:text-rose-400"
+              : ""
+          }`}
+        >
           <TodayIcon className="h-3 w-3" />
           {formatDueDate(task.due_date)}
         </span>
@@ -116,7 +122,9 @@ function TaskMeta({ task }: { task: Task }) {
         </span>
       )}
       {task.tags.map((tag) => (
-        <span key={tag}>#{tag}</span>
+        <span key={tag} className="text-zinc-300 dark:text-zinc-600">
+          #{tag}
+        </span>
       ))}
     </p>
   );
