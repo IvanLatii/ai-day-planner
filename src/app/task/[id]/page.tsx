@@ -16,7 +16,7 @@ const BACK_BUTTON_CLASS =
   "flex min-h-11 w-fit items-center gap-1.5 self-start rounded-md bg-zinc-100 px-6 text-sm font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300";
 
 const OUTLINE_BUTTON_CLASS =
-  "mt-auto flex h-[68px] items-center justify-center gap-2 rounded-md border-2 border-zinc-900 text-sm font-medium text-zinc-900 active:scale-95 dark:border-zinc-50 dark:text-zinc-50";
+  "mt-auto flex h-14 items-center justify-center gap-2 rounded-md border-2 border-zinc-900 text-sm font-medium text-zinc-900 active:scale-95 dark:border-zinc-50 dark:text-zinc-50";
 
 function resizeToFit(el: HTMLTextAreaElement) {
   el.style.height = "auto";
