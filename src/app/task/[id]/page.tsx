@@ -149,11 +149,14 @@ export default function TaskDetailPage() {
 
   function handleDeleteClick() {
     if (!task) return;
+    // Return to wherever this task came from, not always "/" — deleting
+    // from Вхідні should land back on Вхідні, not bounce to Сьогодні.
+    const originHref = task.status === "inbox" ? "/inbox" : "/";
     setDeletedToast(task);
     deleteTask(task.id);
     toastTimerRef.current = window.setTimeout(() => {
       setDeletedToast(null);
-      router.push("/");
+      router.push(originHref);
     }, TOAST_DURATION_MS);
   }
 
