@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { InboxIcon, TodayIcon } from "./icons";
-import { PAGE_HEADING_CLASS } from "@/lib/ui";
+import { PAGE_HEADING_CLASS, PRIMARY_BUTTON_CLASS } from "@/lib/ui";
 
 type Variant = "today-new" | "today-has-inbox" | "inbox-empty";
 type Accent = "amber" | "blue";
@@ -60,7 +60,7 @@ export function EmptyState({ variant }: { variant: Variant }) {
       <p className="mb-10 max-w-xs text-sm text-zinc-500 dark:text-zinc-400">{body}</p>
       <Link
         href={ctaHref}
-        className="flex min-h-[54px] items-center justify-center rounded-md bg-zinc-900 px-6 text-sm font-medium text-white dark:bg-zinc-50 dark:text-zinc-900"
+        className={`${PRIMARY_BUTTON_CLASS.replace("w-full", "w-fit")} px-6`}
       >
         {ctaLabel}
       </Link>

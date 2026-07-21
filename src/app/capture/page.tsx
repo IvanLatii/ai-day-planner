@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { useVoiceDictation } from "@/lib/voice/useVoiceDictation";
-import { PAGE_HEADING_CLASS } from "@/lib/ui";
+import { PAGE_HEADING_CLASS, PRIMARY_BUTTON_CLASS } from "@/lib/ui";
 
 const ERROR_MESSAGES: Record<string, string> = {
   missing_api_key: "AI тимчасово недоступний (немає ключа). Спробуй пізніше.",
@@ -296,7 +296,7 @@ export default function CapturePage() {
         <button
           type="button"
           disabled
-          className="flex h-[68px] w-full items-center justify-center rounded-md bg-zinc-900 text-sm font-semibold text-white opacity-60 dark:bg-zinc-50 dark:text-zinc-900"
+          className={`${PRIMARY_BUTTON_CLASS} opacity-60`}
         >
           Записую
         </button>
@@ -304,7 +304,7 @@ export default function CapturePage() {
         <button
           type="button"
           onClick={handleStartRecording}
-          className="flex h-[68px] w-full items-center justify-center gap-3 rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900"
+          className={PRIMARY_BUTTON_CLASS}
         >
           <MicIcon />
           Записати задачі
@@ -313,9 +313,7 @@ export default function CapturePage() {
         <button
           type="button"
           onClick={handleSubmitClick}
-          className={`flex h-[68px] w-full items-center justify-center gap-2 rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
-            shake ? "animate-shake" : ""
-          }`}
+          className={`${PRIMARY_BUTTON_CLASS} ${shake ? "animate-shake" : ""}`}
         >
           {status === "loading" ? (
             <>

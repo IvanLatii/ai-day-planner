@@ -7,7 +7,7 @@ import { InboxTaskCard } from "@/components/TaskCard";
 import { EmptyState } from "@/components/EmptyState";
 import { CaptureFabButton } from "@/components/CaptureFab";
 import { UndoToast } from "@/components/UndoToast";
-import { PAGE_HEADING_CLASS } from "@/lib/ui";
+import { PAGE_HEADING_CLASS, PRIMARY_BUTTON_CLASS } from "@/lib/ui";
 import type { Task } from "@/lib/tasks/types";
 
 const TOAST_DURATION_MS = 4000;
@@ -59,7 +59,7 @@ export default function InboxPage() {
             startDay();
             router.push("/");
           }}
-          className="h-[68px] w-full rounded-md bg-zinc-900 text-sm font-semibold text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900"
+          className={`${PRIMARY_BUTTON_CLASS} shadow-lg`}
         >
           Підтвердити задачі
         </button>
