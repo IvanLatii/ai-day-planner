@@ -8,15 +8,6 @@ import { capitalize, formatDueDate, formatTimeEstimate } from "@/lib/tasks/forma
 import { PriorityChip } from "./PriorityChip";
 import { TodayIcon, ClockIcon } from "./icons";
 
-function ReturnIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 14 4 9l5-5" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
-    </svg>
-  );
-}
-
 function XIcon({ className = "h-2.5 w-2.5" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className={className}>
@@ -111,7 +102,7 @@ function TaskMeta({ task }: { task: Task }) {
     return null;
   }
   return (
-    <p className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs text-zinc-400 dark:text-zinc-500">
+    <p className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs text-zinc-400 dark:text-zinc-500">
       {task.due_date && (
         <span className="flex items-center gap-1">
           <TodayIcon className="h-3 w-3" />
@@ -151,8 +142,8 @@ export function InboxTaskCard({ task }: { task: Task }) {
           <div className="font-medium text-zinc-900 dark:text-zinc-50">
             {capitalize(task.title)}
           </div>
-          {task.source_text && task.source_text !== task.title && (
-            <p className="mt-1 text-sm italic text-zinc-400 dark:text-zinc-500">
+          {task.unparsed && task.source_text && task.source_text !== task.title && (
+            <p className="mt-1 text-sm text-zinc-400 dark:text-zinc-500">
               &ldquo;{task.source_text}&rdquo;
             </p>
           )}
@@ -171,7 +162,7 @@ export function TodayTaskCard({
   task: Task;
   onDone?: (task: Task) => void;
 }) {
-  const { cyclePriority, toggleDone, returnToInbox } = useTasks();
+  const { cyclePriority, toggleDone } = useTasks();
   const router = useRouter();
 
   return (
@@ -199,18 +190,7 @@ export function TodayTaskCard({
         <TaskMeta task={task} />
       </button>
 
-      <div className="flex items-center gap-1">
-        <PriorityChip priority={task.priority} onClick={() => cyclePriority(task.id)} />
-
-        <button
-          type="button"
-          onClick={() => returnToInbox(task.id)}
-          aria-label="Повернути у Вхідні"
-          className="flex min-h-11 min-w-11 shrink-0 items-center justify-center text-zinc-400"
-        >
-          <ReturnIcon />
-        </button>
-      </div>
+      <PriorityChip priority={task.priority} onClick={() => cyclePriority(task.id)} />
     </div>
   );
 }
