@@ -58,8 +58,8 @@ function DoneToast({ onUndo }: { onUndo: () => void }) {
   return (
     <div className="fixed inset-x-0 bottom-[calc(68px+env(safe-area-inset-bottom))] z-20 flex justify-center px-4">
       <div className="flex w-full items-center justify-between gap-3 rounded-md bg-zinc-700 px-4 py-3 text-sm text-white shadow-lg dark:bg-zinc-300 dark:text-zinc-900">
-        <span className="font-medium">Виконано</span>
-        <button type="button" onClick={onUndo} className="flex shrink-0 items-center gap-1.5 font-semibold">
+        <span className="font-medium opacity-70">Виконано</span>
+        <button type="button" onClick={onUndo} className="flex shrink-0 items-center gap-2 font-semibold">
           <UndoIcon />
           Відмінити
         </button>
