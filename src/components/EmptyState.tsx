@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { InboxIcon, TodayIcon } from "./icons";
-import { PAGE_HEADING_CLASS, PRIMARY_BUTTON_CLASS } from "@/lib/ui";
+import { EMPTY_HEADING_CLASS, PRIMARY_BUTTON_CLASS } from "@/lib/ui";
 
 type Variant = "today-new" | "today-has-inbox" | "inbox-empty";
 type Accent = "amber" | "blue";
@@ -56,7 +56,7 @@ export function EmptyState({ variant }: { variant: Variant }) {
       >
         {icon}
       </div>
-      <h2 className={`mb-3 ${PAGE_HEADING_CLASS}`}>{title}</h2>
+      <h2 className={`mb-3 ${EMPTY_HEADING_CLASS}`}>{title}</h2>
       <p className="mb-10 max-w-xs text-sm text-zinc-500 dark:text-zinc-400">{body}</p>
       <Link
         href={ctaHref}

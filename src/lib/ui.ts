@@ -9,6 +9,14 @@ export const PAGE_HEADING_CLASS =
 export const DETAIL_TITLE_CLASS =
   "font-sans text-[34px] font-semibold leading-[1.1] text-zinc-900 dark:text-zinc-50";
 
+// EmptyState-only heading, 15% smaller than PAGE_HEADING_CLASS (46 → 39px).
+// Kept separate rather than shrinking the shared class — empty-state
+// headings run longer ("Вхідних задач немає", "Задачі чекають у Вхідних")
+// and wrapped a word onto its own line at 320px; "Сьогодні"/"Вхідні"/
+// "Що в голові?" are short and don't have that problem, so they stay at 46px.
+export const EMPTY_HEADING_CLASS =
+  "font-heading text-[39px] leading-[1] font-bold text-zinc-900 dark:text-zinc-50";
+
 // Головні дії екрана — одна висота на весь застосунок.
 export const PRIMARY_BUTTON_CLASS =
   "flex h-14 w-full items-center justify-center gap-2 rounded-md " +
