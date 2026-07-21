@@ -40,12 +40,12 @@ const CONTENT: Record<
 export function EmptyState({ variant }: { variant: Variant }) {
   const { icon, title, body, ctaLabel, ctaHref } = CONTENT[variant];
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-8 py-16 text-center">
-      <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
+    <div className="flex flex-1 flex-col items-center justify-start px-8 pb-16 pt-20 text-center">
+      <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 text-amber-500 dark:bg-amber-500/10 dark:text-amber-400">
         {icon}
       </div>
       <h2 className={`mb-1 ${PAGE_HEADING_CLASS}`}>{title}</h2>
-      <p className="mb-5 max-w-xs text-sm text-zinc-500 dark:text-zinc-400">{body}</p>
+      <p className="mb-10 max-w-xs text-sm text-zinc-500 dark:text-zinc-400">{body}</p>
       <Link
         href={ctaHref}
         className="flex min-h-11 items-center justify-center rounded-md bg-zinc-900 px-6 text-sm font-medium text-white dark:bg-zinc-50 dark:text-zinc-900"
