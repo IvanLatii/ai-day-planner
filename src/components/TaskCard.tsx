@@ -103,41 +103,52 @@ export function TagEditor({
   );
 }
 
-// Compact single-line meta row (date/time/tags) with small icons — replaces
-// the old wrapped colored-pill badges, which took up too much vertical space.
+// Two rows instead of one flex-wrap row: date+duration (task metadata) on
+// row 1, tags on row 2. A single wrapped row broke up unpredictably once a
+// card had 2-3 tags, reading as ragged. Either row is entirely absent (no
+// stray margin) when it has nothing to show.
 function TaskMeta({ task }: { task: Task }) {
-  if (!task.due_date && !task.time_estimate_min && task.tags.length === 0) {
-    return null;
-  }
+  const hasMetaRow = !!task.due_date || !!task.time_estimate_min;
+  const hasTags = task.tags.length > 0;
+  if (!hasMetaRow && !hasTags) return null;
+
   return (
-    <p className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs text-zinc-400 dark:text-zinc-500">
-      {task.due_date && (
-        <span
-          className={`flex items-center gap-1 ${
-            task.status !== "done" && isOverdue(task.due_date)
-              ? "text-rose-500 dark:text-rose-400"
-              : ""
-          }`}
-        >
-          <TodayIcon className="h-3 w-3" />
-          {formatDueDate(task.due_date)}
-        </span>
+    <div className="mt-1.5 text-xs text-zinc-400 dark:text-zinc-500">
+      {hasMetaRow && (
+        <p className="flex items-center gap-x-2.5">
+          {task.due_date && (
+            <span
+              className={`flex items-center gap-1 ${
+                task.status !== "done" && isOverdue(task.due_date)
+                  ? "text-rose-500 dark:text-rose-400"
+                  : ""
+              }`}
+            >
+              <TodayIcon className="h-3 w-3" />
+              {formatDueDate(task.due_date)}
+            </span>
+          )}
+          {task.time_estimate_min && (
+            <span className="flex items-center gap-1">
+              <ClockIcon />
+              {formatTimeEstimate(task.time_estimate_min)}
+            </span>
+          )}
+        </p>
       )}
-      {task.time_estimate_min && (
-        <span className="flex items-center gap-1">
-          <ClockIcon />
-          {formatTimeEstimate(task.time_estimate_min)}
-        </span>
+      {hasTags && (
+        <p className={`flex flex-wrap items-center gap-1.5 ${hasMetaRow ? "mt-1" : ""}`}>
+          {task.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded bg-zinc-100 px-1.5 py-0.5 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+            >
+              #{tag}
+            </span>
+          ))}
+        </p>
       )}
-      {task.tags.map((tag) => (
-        <span
-          key={tag}
-          className="rounded bg-zinc-100 px-1.5 py-0.5 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
-        >
-          #{tag}
-        </span>
-      ))}
-    </p>
+    </div>
   );
 }
 
