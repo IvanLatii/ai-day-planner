@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { FIELD_CLASS, TagEditor } from "@/components/TaskCard";
-import { PriorityChip } from "@/components/PriorityChip";
+import { PriorityField } from "@/components/PriorityChip";
 import { UndoToast } from "@/components/UndoToast";
 import { capitalize } from "@/lib/tasks/format";
 import { DETAIL_TITLE_CLASS } from "@/lib/ui";
@@ -204,7 +204,7 @@ export default function TaskDetailPage() {
           <div className="text-xs text-zinc-500">
             Пріоритет
             <div className="mt-1">
-              <PriorityChip
+              <PriorityField
                 priority={task.priority}
                 onClick={() => cyclePriority(task.id)}
               />

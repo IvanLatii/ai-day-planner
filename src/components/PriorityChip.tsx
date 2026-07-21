@@ -14,6 +14,12 @@ const FULL_LABEL: Record<Priority, string> = {
   low: "Низький",
 };
 
+const DETAIL_LABEL: Record<Priority, string> = {
+  high: "Пріоритет 1",
+  medium: "Пріоритет 2",
+  low: "Пріоритет 3",
+};
+
 const STYLE: Record<Priority, string> = {
   high: "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-300",
   medium: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300",
@@ -46,6 +52,27 @@ export function PriorityChip({
       >
         {LABEL[priority]}
       </span>
+    </button>
+  );
+}
+
+// Detail-screen variant: left-aligned with the rest of the fields
+// (Дедлайн/Хвилин), not centered in a 44×44 tap-target box like the
+// list chip — that box is correct for InboxTaskCard, wrong here.
+export function PriorityField({
+  priority,
+  onClick,
+}: {
+  priority: Priority;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex h-11 w-fit items-center rounded-lg px-3 text-sm font-medium transition-colors active:scale-95 ${STYLE[priority]}`}
+    >
+      {DETAIL_LABEL[priority]}
     </button>
   );
 }
