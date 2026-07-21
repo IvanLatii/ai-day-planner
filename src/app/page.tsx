@@ -5,7 +5,7 @@ import { useTasks } from "@/lib/tasks/useTasks";
 import { TodayTaskCard } from "@/components/TaskCard";
 import { EmptyState } from "@/components/EmptyState";
 import { UndoToast } from "@/components/UndoToast";
-import { formatTodayParts, pluralizeTasks } from "@/lib/tasks/format";
+import { formatTodayFull } from "@/lib/tasks/format";
 import { sortTodayByTime } from "@/lib/tasks/sort";
 import { PAGE_HEADING_CLASS } from "@/lib/ui";
 import type { Task } from "@/lib/tasks/types";
@@ -14,6 +14,35 @@ const TOAST_DURATION_MS = 4000;
 const SORT_MODE_KEY = "ai-day-planner:today-sort";
 type SortMode = "priority" | "time";
 
+const SORT_LABEL: Record<SortMode, string> = {
+  priority: "Пріоритет",
+  time: "Час",
+};
+
+const SORT_OPTION_LABEL: Record<SortMode, string> = {
+  priority: "За пріоритетом",
+  time: "За часом",
+};
+
+function SortIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-3.5 w-3.5">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4-4 4 4M8 15l4 4 4-4" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-4 w-4">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
+// Todoist-style compact trigger + dropdown instead of two always-visible
+// pills — same state/localStorage/sort result, just how it's opened. Also
+// sidesteps the width risk of two wide segments sharing a row with H1.
 function SortModeToggle({
   mode,
   onChange,
@@ -21,33 +50,46 @@ function SortModeToggle({
   mode: SortMode;
   onChange: (mode: SortMode) => void;
 }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <div className="flex w-fit shrink-0 rounded-md bg-zinc-100 p-0.5 dark:bg-zinc-800">
-      {(
-        [
-          ["priority", "За пріоритетом"],
-          ["time", "За часом"],
-        ] as const
-      ).map(([value, label]) => (
-        <button
-          key={value}
-          type="button"
-          onClick={() => onChange(value)}
-          className={`h-8 w-[104px] rounded text-[11px] font-medium transition-colors ${
-            mode === value
-              ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-50"
-              : "text-zinc-500 dark:text-zinc-400"
-          }`}
-        >
-          {label}
-        </button>
-      ))}
+    <div className="relative shrink-0">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex h-9 items-center gap-1.5 rounded-md bg-zinc-100 px-3 text-xs font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+      >
+        <SortIcon />
+        {SORT_LABEL[mode]}
+      </button>
+
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-md bg-white py-1 shadow-lg dark:bg-zinc-800">
+            {(["priority", "time"] as const).map((value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => {
+                  onChange(value);
+                  setOpen(false);
+                }}
+                className="flex min-h-11 w-full items-center justify-between px-3 text-left text-sm text-zinc-700 active:bg-zinc-100 dark:text-zinc-200 dark:active:bg-zinc-700"
+              >
+                {SORT_OPTION_LABEL[value]}
+                {mode === value && <CheckIcon />}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
 
 export default function TodayPage() {
-  const { isLoaded, hasAnyTasks, inboxTasks, todayTasks, toggleDone } = useTasks();
+  const { isLoaded, inboxTasks, todayTasks, toggleDone } = useTasks();
   const [doneToast, setDoneToast] = useState<Task | null>(null);
   const toastTimerRef = useRef<number | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>("priority");
@@ -87,24 +129,14 @@ export default function TodayPage() {
     );
   }
 
-  const todayParts = formatTodayParts();
-
   return (
-    <div className="flex flex-1 flex-col gap-3 px-6 py-6">
+    <div className="flex flex-1 flex-col gap-6 px-6 py-6">
       <div className="flex flex-col gap-1">
-        <h1 className={PAGE_HEADING_CLASS}>Сьогодні</h1>
-        <p className="whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">
-          {todayParts.date}
-          <span className="mx-3">·</span>
-          {todayParts.weekday}
-        </p>
-        <SortModeToggle mode={sortMode} onChange={handleSortChange} />
-        {hasAnyTasks && inboxTasks.length > 0 && (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            У Вхідних ще {inboxTasks.length} {pluralizeTasks(inboxTasks.length)} на
-            розгляд.
-          </p>
-        )}
+        <div className="flex items-center justify-between gap-3">
+          <h1 className={PAGE_HEADING_CLASS}>Сьогодні</h1>
+          <SortModeToggle mode={sortMode} onChange={handleSortChange} />
+        </div>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">{formatTodayFull()}</p>
       </div>
       <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800">
         {(sortMode === "time" ? sortTodayByTime(todayTasks) : todayTasks).map((task) => (
