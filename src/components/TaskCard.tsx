@@ -202,7 +202,7 @@ export function TodayTaskCard({
   const router = useRouter();
 
   return (
-    <div className="flex items-center gap-1.5 py-3">
+    <div className="flex items-center gap-1 py-3">
       <button
         type="button"
         onClick={() => {

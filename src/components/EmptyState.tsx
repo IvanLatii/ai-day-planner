@@ -24,7 +24,7 @@ const CONTENT: Record<
   "today-new": {
     icon: <TodayIcon className="h-8 w-8" />,
     accent: "blue",
-    title: "Ще нічого немає",
+    title: "На сьогодні задач немає",
     body: "Скинь усе, що в голові — AI розбере на задачі.",
     ctaLabel: "Записати",
     ctaHref: "/capture",

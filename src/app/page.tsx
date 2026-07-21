@@ -33,7 +33,7 @@ function SortModeToggle({
           key={value}
           type="button"
           onClick={() => onChange(value)}
-          className={`h-8 w-[88px] rounded text-[11px] font-medium transition-colors ${
+          className={`h-8 w-[104px] rounded text-[11px] font-medium transition-colors ${
             mode === value
               ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-50"
               : "text-zinc-500 dark:text-zinc-400"
@@ -93,14 +93,12 @@ export default function TodayPage() {
     <div className="flex flex-1 flex-col gap-3 px-6 py-6">
       <div className="flex flex-col gap-1">
         <h1 className={PAGE_HEADING_CLASS}>Сьогодні</h1>
-        <div className="flex items-center justify-between gap-2">
-          <p className="whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">
-            {todayParts.date}
-            <span className="mx-3">·</span>
-            {todayParts.weekday}
-          </p>
-          <SortModeToggle mode={sortMode} onChange={handleSortChange} />
-        </div>
+        <p className="whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">
+          {todayParts.date}
+          <span className="mx-3">·</span>
+          {todayParts.weekday}
+        </p>
+        <SortModeToggle mode={sortMode} onChange={handleSortChange} />
         {hasAnyTasks && inboxTasks.length > 0 && (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             У Вхідних ще {inboxTasks.length} {pluralizeTasks(inboxTasks.length)} на
