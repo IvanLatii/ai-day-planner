@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Alumni_Sans } from "next/font/google";
 import { TasksProvider } from "@/lib/tasks/useTasks";
 import { TabBar } from "@/components/TabBar";
 import { CaptureFab } from "@/components/CaptureFab";
+import { MainContent } from "@/components/MainContent";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -39,9 +40,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col">
         <TasksProvider>
-          <main className="mx-auto flex w-full max-w-[700px] flex-1 flex-col pb-20">
-            {children}
-          </main>
+          <MainContent>{children}</MainContent>
           <CaptureFab />
           <TabBar />
         </TasksProvider>

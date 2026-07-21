@@ -162,7 +162,7 @@ export default function CapturePage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 px-6 pb-0 pt-6">
+    <div className="flex flex-1 flex-col gap-4 px-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-6">
       <div className="flex flex-col gap-2">
         <button
           type="button"
@@ -185,14 +185,14 @@ export default function CapturePage() {
           }}
           placeholder="наприклад: подзвонити бухгалтеру, купити молоко..."
           autoFocus
-          className={`min-h-[35vh] flex-1 resize-none border-none bg-zinc-100 p-4 text-base text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:bg-zinc-800 dark:text-zinc-50 dark:focus:ring-zinc-600 ${
-            showInterim ? "rounded-t-2xl" : "rounded-2xl"
+          className={`min-h-[22vh] flex-1 resize-none border-none bg-zinc-100 p-4 text-base text-zinc-900 placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:bg-zinc-800 dark:text-zinc-50 dark:placeholder:text-zinc-400 dark:focus:ring-zinc-600 ${
+            showInterim ? "rounded-t-md" : "rounded-md"
           }`}
         />
         {showInterim && (
           <div
             aria-hidden
-            className="rounded-b-2xl bg-zinc-100 px-4 pb-3 text-base text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500"
+            className="rounded-b-md bg-zinc-100 px-4 pb-3 text-base text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500"
           >
             {interimText}
           </div>
