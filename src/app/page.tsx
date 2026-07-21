@@ -12,6 +12,7 @@ import type { Task } from "@/lib/tasks/types";
 
 const TOAST_DURATION_MS = 4000;
 const SORT_MODE_KEY = "ai-day-planner:today-sort";
+const DONE_COLLAPSED_KEY = "ai-day-planner:today-done-collapsed";
 type SortMode = "priority" | "time";
 
 const SORT_LABEL: Record<SortMode, string> = {
@@ -24,9 +25,9 @@ const SORT_OPTION_LABEL: Record<SortMode, string> = {
   time: "За часом",
 };
 
-function ChevronDownIcon() {
+function ChevronDownIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={className}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
     </svg>
   );
@@ -100,10 +101,11 @@ function SortModeToggle({
 }
 
 export default function TodayPage() {
-  const { isLoaded, inboxTasks, todayTasks, toggleDone } = useTasks();
+  const { isLoaded, inboxTasks, todayTasks, doneTasks, toggleDone } = useTasks();
   const [doneToast, setDoneToast] = useState<Task | null>(null);
   const toastTimerRef = useRef<number | null>(null);
   const [sortMode, setSortMode] = useState<SortMode>("priority");
+  const [doneCollapsed, setDoneCollapsed] = useState(true);
 
   useEffect(() => {
     const stored = window.localStorage.getItem(SORT_MODE_KEY);
@@ -111,9 +113,23 @@ export default function TodayPage() {
     if (stored === "time") setSortMode("time");
   }, []);
 
+  useEffect(() => {
+    const stored = window.localStorage.getItem(DONE_COLLAPSED_KEY);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (stored === "false") setDoneCollapsed(false);
+  }, []);
+
   const handleSortChange = useCallback((mode: SortMode) => {
     setSortMode(mode);
     window.localStorage.setItem(SORT_MODE_KEY, mode);
+  }, []);
+
+  const handleToggleDoneSection = useCallback(() => {
+    setDoneCollapsed((prev) => {
+      const next = !prev;
+      window.localStorage.setItem(DONE_COLLAPSED_KEY, String(next));
+      return next;
+    });
   }, []);
 
   const handleDone = useCallback((task: Task) => {
@@ -131,10 +147,36 @@ export default function TodayPage() {
 
   if (!isLoaded) return null;
 
+  // Reused whether the active list is showing or empty — completing every
+  // task for the day shouldn't erase the trace of having done them (the
+  // same trap as R4 §5's toast: an early empty-state return that doesn't
+  // know about state introduced after it).
+  const doneSection = doneTasks.length > 0 && (
+    <div className="flex flex-col">
+      <button
+        type="button"
+        onClick={handleToggleDoneSection}
+        aria-expanded={!doneCollapsed}
+        className="flex h-11 items-center justify-between text-sm font-medium text-zinc-500 dark:text-zinc-400"
+      >
+        Виконано ({doneTasks.length})
+        <ChevronDownIcon className={`h-4 w-4 transition-transform ${doneCollapsed ? "" : "rotate-180"}`} />
+      </button>
+      {!doneCollapsed && (
+        <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800">
+          {doneTasks.map((task) => (
+            <TodayTaskCard key={task.id} task={task} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
   if (todayTasks.length === 0) {
     return (
       <>
         <EmptyState variant={inboxTasks.length > 0 ? "today-has-inbox" : "today-new"} />
+        {doneSection && <div className="px-6 pb-6">{doneSection}</div>}
         {doneToast && <UndoToast message="Виконано" onUndo={handleUndo} />}
       </>
     );
@@ -154,6 +196,7 @@ export default function TodayPage() {
           <TodayTaskCard key={task.id} task={task} onDone={handleDone} />
         ))}
       </div>
+      {doneSection}
       {doneToast && <UndoToast message="Виконано" onUndo={handleUndo} />}
     </div>
   );

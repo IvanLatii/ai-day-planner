@@ -24,6 +24,7 @@ type TasksContextValue = {
   hasAnyTasks: boolean;
   inboxTasks: Task[];
   todayTasks: Task[];
+  doneTasks: Task[];
   getTask: (id: string) => Task | undefined;
   addFromCapture: (text: string) => Promise<CaptureResult>;
   startDay: () => void;
@@ -178,6 +179,10 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     () => sortToday(tasks.filter((t) => t.status === "today")),
     [tasks]
   );
+  const doneTasks = useMemo(
+    () => tasks.filter((t) => t.status === "done"),
+    [tasks]
+  );
   const hasAnyTasks = tasks.length > 0;
 
   const getTask = useCallback(
@@ -190,6 +195,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     hasAnyTasks,
     inboxTasks,
     todayTasks,
+    doneTasks,
     getTask,
     addFromCapture,
     startDay,

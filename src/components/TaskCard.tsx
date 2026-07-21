@@ -24,6 +24,14 @@ function MoveToTodayIcon() {
   );
 }
 
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} className="h-3.5 w-3.5 text-white dark:text-zinc-900">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
 // Fixed h-11 (not min-h-11) + no border keeps date/number/text inputs pixel
 // identical — native UA styling otherwise gives type=date extra intrinsic
 // height that a min-height alone doesn't override.
@@ -207,6 +215,7 @@ export function TodayTaskCard({
 }) {
   const { toggleDone } = useTasks();
   const router = useRouter();
+  const isDone = task.status === "done";
 
   return (
     <div className="flex items-center gap-1 py-3">
@@ -216,12 +225,18 @@ export function TodayTaskCard({
           toggleDone(task.id);
           onDone?.(task);
         }}
-        aria-label="Позначити виконаною"
+        aria-label={isDone ? "Скасувати виконання" : "Позначити виконаною"}
         className="-ml-2.5 flex min-h-11 min-w-11 shrink-0 items-center justify-center"
       >
         <span
-          className={`h-6 w-6 rounded-full border-2 ${PRIORITY_CHECKBOX_BORDER[task.priority]}`}
-        />
+          className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${
+            isDone
+              ? "border-zinc-900 bg-zinc-900 dark:border-zinc-50 dark:bg-zinc-50"
+              : PRIORITY_CHECKBOX_BORDER[task.priority]
+          }`}
+        >
+          {isDone && <CheckIcon />}
+        </span>
       </button>
 
       <button
@@ -229,7 +244,13 @@ export function TodayTaskCard({
         onClick={() => router.push(`/task/${task.id}`)}
         className="min-w-0 flex-1 text-left"
       >
-        <p className="truncate font-medium text-zinc-900 dark:text-zinc-50">
+        <p
+          className={`truncate font-medium ${
+            isDone
+              ? "text-zinc-400 line-through dark:text-zinc-500"
+              : "text-zinc-900 dark:text-zinc-50"
+          }`}
+        >
           {capitalize(task.title)}
         </p>
         <TaskMeta task={task} />
