@@ -34,6 +34,8 @@ type TasksContextValue = {
   updateTask: (id: string, patch: EditableFields) => void;
   deleteTask: (id: string) => void;
   restoreTask: (task: Task) => void;
+  deleteInboxTasks: () => void;
+  restoreTasks: (tasks: Task[]) => void;
 };
 
 const TasksContext = createContext<TasksContextValue | null>(null);
@@ -159,6 +161,15 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     setTasks((prev) => [...prev, task]);
   }, []);
 
+  // "Очистити Вхідні" — only status:"inbox" tasks; Today/done are untouched.
+  const deleteInboxTasks = useCallback(() => {
+    setTasks((prev) => prev.filter((t) => t.status !== "inbox"));
+  }, []);
+
+  const restoreTasks = useCallback((tasksToRestore: Task[]) => {
+    setTasks((prev) => [...prev, ...tasksToRestore]);
+  }, []);
+
   const inboxTasks = useMemo(
     () => sortInbox(tasks.filter((t) => t.status === "inbox")),
     [tasks]
@@ -189,6 +200,8 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     updateTask,
     deleteTask,
     restoreTask,
+    deleteInboxTasks,
+    restoreTasks,
   };
 
   return (
