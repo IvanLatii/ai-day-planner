@@ -70,7 +70,7 @@ export function PriorityField({
     <button
       type="button"
       onClick={onClick}
-      className={`flex h-11 w-fit items-center rounded-lg px-3 text-sm font-medium transition-colors active:scale-95 ${STYLE[priority]}`}
+      className={`flex h-11 w-full items-center justify-start rounded-lg px-3 text-sm font-medium transition-colors active:scale-95 ${STYLE[priority]}`}
     >
       {DETAIL_LABEL[priority]}
     </button>

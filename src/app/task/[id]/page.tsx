@@ -186,7 +186,7 @@ export default function TaskDetailPage() {
                 type="button"
                 onClick={() => toggleDone(task.id)}
                 aria-label={isDone ? "Скасувати виконання" : "Позначити виконаною"}
-                className="-mr-2 mt-1 flex min-h-11 min-w-11 shrink-0 items-center justify-center"
+                className="-mr-2 flex min-h-11 min-w-11 shrink-0 items-start justify-center"
               >
                 <span
                   className={`flex h-7 w-7 items-center justify-center rounded-full border-2 ${
@@ -218,7 +218,7 @@ export default function TaskDetailPage() {
               />
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-4">
             <label className="block min-w-0 flex-1 text-xs text-zinc-500">
               Дедлайн
               <input
