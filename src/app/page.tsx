@@ -24,10 +24,10 @@ const SORT_OPTION_LABEL: Record<SortMode, string> = {
   time: "За часом",
 };
 
-function SortIcon() {
+function ChevronDownIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-3.5 w-3.5">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l4-4 4 4M8 15l4 4 4-4" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
     </svg>
   );
 }
@@ -52,21 +52,32 @@ function SortModeToggle({
 }) {
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    if (!open) return;
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
   return (
     <div className="relative shrink-0">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-9 items-center gap-1.5 rounded-md bg-zinc-100 px-3 text-xs font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="flex h-9 w-[132px] items-center justify-between rounded-md bg-zinc-100 px-3 text-xs font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
       >
-        <SortIcon />
         {SORT_LABEL[mode]}
+        <ChevronDownIcon />
       </button>
 
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-md bg-white py-1 shadow-lg dark:bg-zinc-800">
+          <div className="absolute right-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-md bg-white py-1 shadow-lg ring-1 ring-zinc-200 dark:bg-zinc-800 dark:ring-zinc-700">
             {(["priority", "time"] as const).map((value) => (
               <button
                 key={value}
