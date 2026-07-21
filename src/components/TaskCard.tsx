@@ -103,52 +103,48 @@ export function TagEditor({
   );
 }
 
-// Two rows instead of one flex-wrap row: date+duration (task metadata) on
-// row 1, tags on row 2. A single wrapped row broke up unpredictably once a
-// card had 2-3 tags, reading as ragged. Either row is entirely absent (no
-// stray margin) when it has nothing to show.
+// Single row (date/time/tags) again — the two-row split read as too tall
+// on real data. To keep the row from breaking up raggedly with 2-3 tags
+// (the reason it was split in the first place), cap visible tags at 2 and
+// collapse the rest into a plain "+N" indicator (not clickable — the full
+// list is on the detail screen).
 function TaskMeta({ task }: { task: Task }) {
-  const hasMetaRow = !!task.due_date || !!task.time_estimate_min;
-  const hasTags = task.tags.length > 0;
-  if (!hasMetaRow && !hasTags) return null;
+  if (!task.due_date && !task.time_estimate_min && task.tags.length === 0) {
+    return null;
+  }
+  const visibleTags = task.tags.slice(0, 2);
+  const hiddenTagCount = task.tags.length - visibleTags.length;
 
   return (
-    <div className="mt-1.5 text-xs text-zinc-400 dark:text-zinc-500">
-      {hasMetaRow && (
-        <p className="flex items-center gap-x-2.5">
-          {task.due_date && (
-            <span
-              className={`flex items-center gap-1 ${
-                task.status !== "done" && isOverdue(task.due_date)
-                  ? "text-rose-500 dark:text-rose-400"
-                  : ""
-              }`}
-            >
-              <TodayIcon className="h-3 w-3" />
-              {formatDueDate(task.due_date)}
-            </span>
-          )}
-          {task.time_estimate_min && (
-            <span className="flex items-center gap-1">
-              <ClockIcon />
-              {formatTimeEstimate(task.time_estimate_min)}
-            </span>
-          )}
-        </p>
+    <p className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs text-zinc-400 dark:text-zinc-500">
+      {task.due_date && (
+        <span
+          className={`flex items-center gap-1 ${
+            task.status !== "done" && isOverdue(task.due_date)
+              ? "text-rose-500 dark:text-rose-400"
+              : ""
+          }`}
+        >
+          <TodayIcon className="h-3 w-3" />
+          {formatDueDate(task.due_date)}
+        </span>
       )}
-      {hasTags && (
-        <p className={`flex flex-wrap items-center gap-1.5 ${hasMetaRow ? "mt-1" : ""}`}>
-          {task.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded bg-zinc-100 px-1.5 py-0.5 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
-            >
-              #{tag}
-            </span>
-          ))}
-        </p>
+      {task.time_estimate_min && (
+        <span className="flex items-center gap-1">
+          <ClockIcon />
+          {formatTimeEstimate(task.time_estimate_min)}
+        </span>
       )}
-    </div>
+      {visibleTags.map((tag) => (
+        <span
+          key={tag}
+          className="rounded bg-zinc-100 px-1.5 py-0.5 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+        >
+          #{tag}
+        </span>
+      ))}
+      {hiddenTagCount > 0 && <span>+{hiddenTagCount}</span>}
+    </p>
   );
 }
 
