@@ -66,12 +66,12 @@ function SparkleIcon() {
   );
 }
 
-// Bigger than before (h-5/w-1 vs h-3/w-0.5) so it reads as a real
-// recording indicator rather than a decorative accent.
+// Sized to roughly match the cap-height of the "Слухаю…" label next to
+// it (~14-16px) so it reads as an inline indicator, not a dominant shape.
 function WaveformIcon() {
   const delays = ["0ms", "150ms", "300ms", "450ms"];
   return (
-    <span className="flex h-5 items-end gap-1" aria-hidden>
+    <span className="flex h-4 items-end gap-1" aria-hidden>
       {delays.map((delay) => (
         <span
           key={delay}
@@ -224,7 +224,7 @@ export default function CapturePage() {
 
       {listening && (
         <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+          <div className="flex items-center justify-center gap-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
             <WaveformIcon />
             Слухаю…
           </div>
