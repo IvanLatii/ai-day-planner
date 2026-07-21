@@ -63,3 +63,12 @@ body {
   animation: voice-wave 0.9s ease-in-out infinite;
   transform-origin: center;
 }
+
+/* Shared width cap for the main content column and every fixed
+   overlay (tab bar, FAB, toasts) so they stay aligned on wide
+   screens instead of drifting to the edges of the window. */
+.app-column {
+  width: 100%;
+  max-width: 700px;
+  margin-inline: auto;
+}

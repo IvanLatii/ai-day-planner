@@ -26,7 +26,7 @@ export default function InboxPage() {
         ))}
       </div>
 
-      <div className="fixed inset-x-0 bottom-[calc(68px+env(safe-area-inset-bottom))] z-10 flex flex-col items-end gap-3 px-6">
+      <div className="app-column fixed inset-x-0 bottom-[calc(68px+env(safe-area-inset-bottom))] z-10 flex flex-col items-end gap-3 px-6">
         <CaptureFabButton />
         <button
           type="button"

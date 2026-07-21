@@ -39,7 +39,9 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col">
         <TasksProvider>
-          <main className="flex flex-1 flex-col pb-20">{children}</main>
+          <main className="mx-auto flex w-full max-w-[700px] flex-1 flex-col pb-20">
+            {children}
+          </main>
           <CaptureFab />
           <TabBar />
         </TasksProvider>
