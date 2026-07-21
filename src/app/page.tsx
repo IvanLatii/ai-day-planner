@@ -142,7 +142,7 @@ export default function TodayPage() {
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-6 py-6">
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between gap-3">
           <h1 className={PAGE_HEADING_CLASS}>Сьогодні</h1>
           <SortModeToggle mode={sortMode} onChange={handleSortChange} />
