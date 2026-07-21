@@ -90,7 +90,7 @@ function LoadingDots() {
       {delays.map((delay) => (
         <span
           key={delay}
-          className="pulse-dot h-1.5 w-1.5 rounded-full bg-rose-500"
+          className="pulse-dot h-1.5 w-1.5 rounded-full bg-white dark:bg-zinc-900"
           style={{ animationDelay: delay }}
         />
       ))}
@@ -319,7 +319,7 @@ export default function CapturePage() {
         >
           {status === "loading" ? (
             <>
-              Розбираю...
+              Розбираю
               <LoadingDots />
             </>
           ) : status === "error" ? (
