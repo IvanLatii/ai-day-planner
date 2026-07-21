@@ -2,10 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTasks } from "@/lib/tasks/useTasks";
 
 export function CaptureFab() {
   const pathname = usePathname();
+  const { inboxTasks } = useTasks();
+
   if (pathname === "/capture" || pathname.startsWith("/task/")) return null;
+  if (pathname === "/inbox" && inboxTasks.length > 0) return null;
 
   return (
     <Link
