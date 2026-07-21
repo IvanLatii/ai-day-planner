@@ -48,7 +48,7 @@ export function PriorityChip({
       className="flex min-h-11 min-w-11 shrink-0 items-center justify-center active:scale-95"
     >
       <span
-        className={`flex h-7 w-7 items-center justify-center rounded-md text-xs font-bold transition-colors ${STYLE[priority]}`}
+        className={`flex h-8 w-8 items-center justify-center rounded-md text-xs font-bold transition-colors ${STYLE[priority]}`}
       >
         {LABEL[priority]}
       </span>
