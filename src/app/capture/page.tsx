@@ -72,6 +72,24 @@ function WaveformIcon() {
   );
 }
 
+// Bigger equalizer that sits directly above the action button while
+// recording — distinct from the small inline WaveformIcon next to
+// "Слухаю…", which stays where it is.
+function EqualizerBar() {
+  const delays = ["0ms", "100ms", "200ms", "300ms", "400ms", "300ms", "200ms", "100ms"];
+  return (
+    <div className="flex h-6 items-end justify-center gap-1" aria-hidden>
+      {delays.map((delay, i) => (
+        <span
+          key={i}
+          className="voice-wave-bar h-full w-1 rounded-full bg-rose-500"
+          style={{ animationDelay: delay }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function ClearIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
@@ -104,6 +122,7 @@ export default function CapturePage() {
   } = useVoiceDictation({ onTranscript: handleTranscript });
 
   const showInterim = listening && interimText.length > 0;
+  const showMergedMicButton = !listening && text.trim().length === 0 && voiceSupported;
 
   function handleClear() {
     setText("");
@@ -144,11 +163,11 @@ export default function CapturePage() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 px-6 pb-0 pt-6">
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         <button
           type="button"
           onClick={() => router.back()}
-          className="flex min-h-11 w-fit items-center gap-1.5 rounded-md bg-zinc-100 px-3 text-sm font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+          className="flex min-h-11 w-fit items-center gap-1.5 rounded-md bg-zinc-100 px-6 text-sm font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
         >
           <BackIcon />
           Назад
@@ -164,9 +183,9 @@ export default function CapturePage() {
             setText(e.target.value);
             if (status === "error") setStatus("idle");
           }}
-          placeholder="наприклад: подзвонити бухгалтеру, купити молоко, до стоматолога на тижні..."
+          placeholder="наприклад: подзвонити бухгалтеру, купити молоко..."
           autoFocus
-          className={`min-h-[35vh] flex-1 resize-none border-none bg-zinc-100 p-4 text-base text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:bg-zinc-800 dark:text-zinc-50 dark:focus:ring-zinc-600 ${
+          className={`min-h-[35vh] flex-1 resize-none border-none bg-zinc-100 p-4 text-base text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:bg-zinc-800 dark:text-zinc-50 dark:focus:ring-zinc-600 ${
             showInterim ? "rounded-t-2xl" : "rounded-2xl"
           }`}
         />
@@ -180,7 +199,7 @@ export default function CapturePage() {
         )}
       </div>
 
-      {(voiceSupported || text.length > 0) && (
+      {(voiceSupported || text.length > 0) && !showMergedMicButton && (
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400">
             {listening && (
@@ -208,7 +227,7 @@ export default function CapturePage() {
                     type="button"
                     onClick={handleClear}
                     aria-label="Очистити поле"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-600 shadow-sm active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-zinc-400 active:scale-95 dark:text-zinc-500"
                   >
                     <ClearIcon />
                   </button>
@@ -249,19 +268,36 @@ export default function CapturePage() {
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={handleSubmitClick}
-        className={`h-14 w-full rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
-          shake ? "animate-shake" : ""
-        }`}
-      >
-        {status === "loading"
-          ? "Розбираю..."
-          : status === "error"
-            ? "Спробувати ще раз"
-            : "Розібрати на задачі"}
-      </button>
+      {listening && (
+        <div className="flex justify-center">
+          <EqualizerBar />
+        </div>
+      )}
+
+      {showMergedMicButton ? (
+        <button
+          type="button"
+          onClick={startVoice}
+          className="flex h-14 w-full items-center justify-center gap-3 rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900"
+        >
+          <MicIcon />
+          Записати задачу
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={handleSubmitClick}
+          className={`h-14 w-full rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
+            shake ? "animate-shake" : ""
+          }`}
+        >
+          {status === "loading"
+            ? "Розбираю..."
+            : status === "error"
+              ? "Спробувати ще раз"
+              : "Розібрати на задачі"}
+        </button>
+      )}
     </div>
   );
 }

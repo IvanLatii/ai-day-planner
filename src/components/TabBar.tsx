@@ -21,7 +21,7 @@ function TabLink({
   return (
     <Link href={href} className="flex h-12 flex-1 items-center p-1.5">
       <span
-        className={`flex h-full w-full items-center justify-center gap-1.5 rounded-md text-sm font-medium transition-colors ${
+        className={`flex h-full w-full items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors ${
           active
             ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
             : "text-zinc-400 dark:text-zinc-500"
@@ -43,7 +43,7 @@ export function TabBar() {
   const pathname = usePathname();
   const { inboxTasks } = useTasks();
 
-  if (pathname.startsWith("/task/")) return null;
+  if (pathname.startsWith("/task/") || pathname === "/capture") return null;
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-10 flex border-t border-zinc-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">

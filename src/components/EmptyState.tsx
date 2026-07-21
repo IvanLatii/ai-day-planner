@@ -40,7 +40,7 @@ const CONTENT: Record<
 export function EmptyState({ variant }: { variant: Variant }) {
   const { icon, title, body, ctaLabel, ctaHref } = CONTENT[variant];
   return (
-    <div className="flex flex-1 flex-col items-center justify-start px-8 pb-16 pt-20 text-center">
+    <div className="flex flex-1 flex-col items-center justify-start px-8 pb-16 pt-32 text-center">
       <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 text-amber-500 dark:bg-amber-500/10 dark:text-amber-400">
         {icon}
       </div>
