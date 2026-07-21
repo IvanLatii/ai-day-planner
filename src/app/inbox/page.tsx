@@ -34,7 +34,7 @@ export default function InboxPage() {
             startDay();
             router.push("/");
           }}
-          className="h-14 w-full rounded-md bg-zinc-900 text-sm font-semibold text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900"
+          className="h-[68px] w-full rounded-md bg-zinc-900 text-sm font-semibold text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900"
         >
           Підтвердити задачі
         </button>

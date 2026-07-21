@@ -23,7 +23,7 @@ const CONTENT: Record<
   },
   "today-has-inbox": {
     icon: <InboxIcon className="h-8 w-8" />,
-    title: "У Вхідних є задачі",
+    title: "Задачі у Вхідних",
     body: "Переглянь і підтверди — вони стануть планом на сьогодні.",
     ctaLabel: "Перейти у Вхідні",
     ctaHref: "/inbox",
@@ -48,7 +48,7 @@ export function EmptyState({ variant }: { variant: Variant }) {
       <p className="mb-10 max-w-xs text-sm text-zinc-500 dark:text-zinc-400">{body}</p>
       <Link
         href={ctaHref}
-        className="flex min-h-11 items-center justify-center rounded-md bg-zinc-900 px-6 text-sm font-medium text-white dark:bg-zinc-50 dark:text-zinc-900"
+        className="flex min-h-[54px] items-center justify-center rounded-md bg-zinc-900 px-6 text-sm font-medium text-white dark:bg-zinc-50 dark:text-zinc-900"
       >
         {ctaLabel}
       </Link>

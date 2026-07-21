@@ -278,7 +278,7 @@ export default function CapturePage() {
         <button
           type="button"
           onClick={startVoice}
-          className="flex h-14 w-full items-center justify-center gap-3 rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900"
+          className="flex h-[68px] w-full items-center justify-center gap-3 rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900"
         >
           <MicIcon />
           Записати задачу
@@ -287,7 +287,7 @@ export default function CapturePage() {
         <button
           type="button"
           onClick={handleSubmitClick}
-          className={`h-14 w-full rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
+          className={`h-[68px] w-full rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
             shake ? "animate-shake" : ""
           }`}
         >
