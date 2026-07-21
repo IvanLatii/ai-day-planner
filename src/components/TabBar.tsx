@@ -5,32 +5,39 @@ import { usePathname } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { InboxIcon, TodayIcon } from "./icons";
 
+type Accent = "amber" | "blue";
+
+const ACTIVE_ACCENT_STYLE: Record<Accent, string> = {
+  amber: "bg-amber-500/15 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400",
+  blue: "bg-blue-500/15 text-blue-600 dark:bg-blue-500/15 dark:text-blue-400",
+};
+
 function TabLink({
   href,
   label,
   icon,
   active,
+  accent,
   badge,
 }: {
   href: string;
   label: string;
   icon: React.ReactNode;
   active: boolean;
+  accent: Accent;
   badge?: number;
 }) {
   return (
     <Link href={href} className="flex h-12 flex-1 items-center p-1.5">
       <span
         className={`flex h-full w-full items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors ${
-          active
-            ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
-            : "text-zinc-400 dark:text-zinc-500"
+          active ? ACTIVE_ACCENT_STYLE[accent] : "text-zinc-400 dark:text-zinc-500"
         }`}
       >
         {icon}
         {label}
         {!!badge && badge > 0 && (
-          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-zinc-700 px-1 text-[10px] font-semibold leading-none text-white dark:bg-zinc-300 dark:text-zinc-900">
+          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-semibold leading-none text-white">
             {badge}
           </span>
         )}
@@ -52,9 +59,16 @@ export function TabBar() {
         label="Вхідні"
         icon={<InboxIcon />}
         active={pathname === "/inbox"}
+        accent="amber"
         badge={inboxTasks.length}
       />
-      <TabLink href="/" label="Сьогодні" icon={<TodayIcon />} active={pathname === "/"} />
+      <TabLink
+        href="/"
+        label="Сьогодні"
+        icon={<TodayIcon />}
+        active={pathname === "/"}
+        accent="blue"
+      />
     </nav>
   );
 }
