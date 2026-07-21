@@ -3,11 +3,18 @@ import { InboxIcon, TodayIcon } from "./icons";
 import { PAGE_HEADING_CLASS } from "@/lib/ui";
 
 type Variant = "today-new" | "today-has-inbox" | "inbox-empty";
+type Accent = "amber" | "blue";
+
+const ACCENT_STYLE: Record<Accent, string> = {
+  amber: "bg-amber-50 text-amber-500 dark:bg-amber-500/10 dark:text-amber-400",
+  blue: "bg-blue-50 text-blue-500 dark:bg-blue-500/10 dark:text-blue-400",
+};
 
 const CONTENT: Record<
   Variant,
   {
     icon: React.ReactNode;
+    accent: Accent;
     title: string;
     body: string;
     ctaLabel: string;
@@ -16,6 +23,7 @@ const CONTENT: Record<
 > = {
   "today-new": {
     icon: <TodayIcon className="h-8 w-8" />,
+    accent: "blue",
     title: "Ще нічого немає",
     body: "Скинь усе, що в голові — AI розбере на задачі.",
     ctaLabel: "Записати",
@@ -23,6 +31,7 @@ const CONTENT: Record<
   },
   "today-has-inbox": {
     icon: <InboxIcon className="h-8 w-8" />,
+    accent: "blue",
     title: "Задачі у Вхідних",
     body: "Переглянь і підтверди — вони стануть планом на сьогодні.",
     ctaLabel: "Перейти у Вхідні",
@@ -30,6 +39,7 @@ const CONTENT: Record<
   },
   "inbox-empty": {
     icon: <InboxIcon className="h-8 w-8" />,
+    accent: "amber",
     title: "Вхідні порожні",
     body: "Скинь усе, що в голові — AI розбере на задачі.",
     ctaLabel: "Записати",
@@ -38,10 +48,12 @@ const CONTENT: Record<
 };
 
 export function EmptyState({ variant }: { variant: Variant }) {
-  const { icon, title, body, ctaLabel, ctaHref } = CONTENT[variant];
+  const { icon, accent, title, body, ctaLabel, ctaHref } = CONTENT[variant];
   return (
     <div className="flex flex-1 flex-col items-center justify-start px-8 pb-16 pt-32 text-center">
-      <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 text-amber-500 dark:bg-amber-500/10 dark:text-amber-400">
+      <div
+        className={`mb-3 flex h-20 w-20 items-center justify-center rounded-full ${ACCENT_STYLE[accent]}`}
+      >
         {icon}
       </div>
       <h2 className={`mb-1 ${PAGE_HEADING_CLASS}`}>{title}</h2>
