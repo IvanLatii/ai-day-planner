@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { TodayTaskCard } from "@/components/TaskCard";
 import { EmptyState } from "@/components/EmptyState";
-import { formatTodayLabel, pluralizeTasks } from "@/lib/tasks/format";
+import { formatTodayParts, pluralizeTasks } from "@/lib/tasks/format";
 import { sortTodayByTime } from "@/lib/tasks/sort";
 import { PAGE_HEADING_CLASS } from "@/lib/ui";
 import type { Task } from "@/lib/tasks/types";
@@ -21,7 +21,7 @@ function SortModeToggle({
   onChange: (mode: SortMode) => void;
 }) {
   return (
-    <div className="flex w-fit self-start rounded-md bg-zinc-100 p-1 dark:bg-zinc-800">
+    <div className="flex w-fit shrink-0 rounded-md bg-zinc-100 p-0.5 dark:bg-zinc-800">
       {(
         [
           ["priority", "За пріоритетом"],
@@ -32,7 +32,7 @@ function SortModeToggle({
           key={value}
           type="button"
           onClick={() => onChange(value)}
-          className={`h-7 rounded px-3 text-xs font-medium transition-colors ${
+          className={`h-8 w-[88px] rounded text-[11px] font-medium transition-colors ${
             mode === value
               ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-50"
               : "text-zinc-500 dark:text-zinc-400"
@@ -109,11 +109,20 @@ export default function TodayPage() {
     );
   }
 
+  const todayParts = formatTodayParts();
+
   return (
     <div className="flex flex-1 flex-col gap-3 px-6 py-6">
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1">
         <h1 className={PAGE_HEADING_CLASS}>Сьогодні</h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">{formatTodayLabel()}</p>
+        <div className="flex items-center justify-between gap-2">
+          <p className="whitespace-nowrap text-sm text-zinc-500 dark:text-zinc-400">
+            {todayParts.date}
+            <span className="mx-3">·</span>
+            {todayParts.weekday}
+          </p>
+          <SortModeToggle mode={sortMode} onChange={handleSortChange} />
+        </div>
         {hasAnyTasks && inboxTasks.length > 0 && (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             У Вхідних ще {inboxTasks.length} {pluralizeTasks(inboxTasks.length)} на
@@ -121,7 +130,6 @@ export default function TodayPage() {
           </p>
         )}
       </div>
-      <SortModeToggle mode={sortMode} onChange={handleSortChange} />
       <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800">
         {(sortMode === "time" ? sortTodayByTime(todayTasks) : todayTasks).map((task) => (
           <TodayTaskCard key={task.id} task={task} onDone={handleDone} />

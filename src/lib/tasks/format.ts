@@ -12,13 +12,15 @@ export function formatDueDate(iso: string): string {
   }).format(date);
 }
 
-export function formatTodayLabel(date: Date = new Date()): string {
+export function formatTodayParts(date: Date = new Date()): { date: string; weekday: string } {
   const datePart = new Intl.DateTimeFormat("uk-UA", {
     day: "numeric",
     month: "short",
-  }).format(date);
+  })
+    .format(date)
+    .replace(/\.$/, "");
   const weekday = new Intl.DateTimeFormat("uk-UA", { weekday: "long" }).format(date);
-  return `${datePart} · ${capitalize(weekday)}`;
+  return { date: datePart, weekday: capitalize(weekday) };
 }
 
 export function formatTimeEstimate(min: number): string {

@@ -174,7 +174,7 @@ export function TodayTaskCard({
           onDone?.(task);
         }}
         aria-label="Позначити виконаною"
-        className="flex min-h-11 min-w-11 shrink-0 items-center justify-center"
+        className="-ml-2.5 flex min-h-11 min-w-11 shrink-0 items-center justify-center"
       >
         <span
           className={`h-6 w-6 rounded-full border-2 ${PRIORITY_CHECKBOX_BORDER[task.priority]}`}
