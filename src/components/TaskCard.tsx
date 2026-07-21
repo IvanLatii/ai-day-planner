@@ -16,6 +16,93 @@ function ReturnIcon() {
   );
 }
 
+function XIcon({ className = "h-2.5 w-2.5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className={className}>
+      <path strokeLinecap="round" d="M6 6l12 12M18 6 6 18" />
+    </svg>
+  );
+}
+
+// Fixed h-11 (not min-h-11) + no border keeps date/number/text inputs pixel
+// identical — native UA styling otherwise gives type=date extra intrinsic
+// height that a min-height alone doesn't override.
+export const FIELD_CLASS =
+  "mt-1 h-11 w-full min-w-0 rounded-lg bg-zinc-100 px-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:ring-2 focus:ring-zinc-300 dark:bg-zinc-800 dark:text-zinc-50 dark:focus:ring-zinc-600";
+
+export function TagEditor({
+  tags,
+  onChange,
+}: {
+  tags: string[];
+  onChange: (tags: string[]) => void;
+}) {
+  const [adding, setAdding] = useState(false);
+  const [draft, setDraft] = useState("");
+
+  function commit() {
+    const value = draft.trim();
+    if (value && !tags.includes(value)) onChange([...tags, value]);
+    setDraft("");
+    setAdding(false);
+  }
+
+  function remove(tag: string) {
+    onChange(tags.filter((t) => t !== tag));
+  }
+
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      {tags.map((tag) => (
+        <span
+          key={tag}
+          className="flex items-center gap-1 rounded-full bg-zinc-100 py-1.5 pl-3 pr-2 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+        >
+          #{tag}
+          <button
+            type="button"
+            onClick={() => remove(tag)}
+            aria-label={`Видалити тег ${tag}`}
+            className="-m-1 flex h-7 w-7 items-center justify-center rounded-full text-zinc-400 active:scale-95 dark:text-zinc-500"
+          >
+            <XIcon />
+          </button>
+        </span>
+      ))}
+      {adding ? (
+        <input
+          autoFocus
+          type="text"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              commit();
+            }
+            if (e.key === "Escape") {
+              setDraft("");
+              setAdding(false);
+            }
+          }}
+          onBlur={commit}
+          placeholder="тег"
+          className="h-9 w-24 rounded-full bg-zinc-100 px-3 text-xs text-zinc-900 outline-none dark:bg-zinc-800 dark:text-zinc-50"
+        />
+      ) : (
+        <button
+          type="button"
+          onClick={() => setAdding(true)}
+          aria-label="Додати тег"
+          className="flex h-9 min-w-9 items-center justify-center rounded-full bg-zinc-100 px-3 text-sm font-medium text-zinc-500 active:scale-95 dark:bg-zinc-800 dark:text-zinc-400"
+        >
+          +
+        </button>
+      )}
+    </div>
+  );
+}
+
 // Compact single-line meta row (date/time/tags) with small icons — replaces
 // the old wrapped colored-pill badges, which took up too much vertical space.
 function TaskMeta({ task }: { task: Task }) {
@@ -74,14 +161,14 @@ export function InboxTaskCard({ task }: { task: Task }) {
       </div>
 
       {open && (
-        <div className="mt-3 space-y-2 border-t border-zinc-100 pt-3 dark:border-zinc-800">
+        <div className="mt-3 space-y-3 border-t border-zinc-100 pt-3 dark:border-zinc-800">
           <label className="block text-xs text-zinc-500">
             Назва
             <input
               type="text"
               defaultValue={task.title}
               onBlur={(e) => updateTask(task.id, { title: e.target.value })}
-              className="mt-1 min-h-11 w-full rounded-lg border border-zinc-200 px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"
+              className={FIELD_CLASS}
             />
           </label>
           <div className="flex gap-2">
@@ -93,7 +180,7 @@ export function InboxTaskCard({ task }: { task: Task }) {
                 onChange={(e) =>
                   updateTask(task.id, { due_date: e.target.value || undefined })
                 }
-                className="mt-1 min-h-11 w-full min-w-0 rounded-lg border border-zinc-200 px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"
+                className={`${FIELD_CLASS} appearance-none [color-scheme:light] dark:[color-scheme:dark]`}
               />
             </label>
             <label className="block min-w-0 flex-1 text-xs text-zinc-500">
@@ -109,26 +196,19 @@ export function InboxTaskCard({ task }: { task: Task }) {
                       : undefined,
                   })
                 }
-                className="mt-1 min-h-11 w-full min-w-0 rounded-lg border border-zinc-200 px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"
+                className={`${FIELD_CLASS} appearance-none`}
               />
             </label>
           </div>
-          <label className="block text-xs text-zinc-500">
-            Теги (через кому)
-            <input
-              type="text"
-              defaultValue={task.tags.join(", ")}
-              onBlur={(e) =>
-                updateTask(task.id, {
-                  tags: e.target.value
-                    .split(",")
-                    .map((t) => t.trim())
-                    .filter(Boolean),
-                })
-              }
-              className="mt-1 min-h-11 w-full rounded-lg border border-zinc-200 px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"
-            />
-          </label>
+          <div className="text-xs text-zinc-500">
+            Теги
+            <div className="mt-1">
+              <TagEditor
+                tags={task.tags}
+                onChange={(tags) => updateTask(task.id, { tags })}
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>
