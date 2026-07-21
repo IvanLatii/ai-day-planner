@@ -1,7 +1,7 @@
 // Shared page-heading style so "Вхідні"/"Сьогодні"/"Що в голові?"/empty
 // states all stay the same size as new screens are added.
 export const PAGE_HEADING_CLASS =
-  "font-heading text-[54px] leading-tight font-bold text-zinc-900 dark:text-zinc-50";
+  "font-heading text-[46px] leading-[1] font-bold text-zinc-900 dark:text-zinc-50";
 
 // Task-detail title: default Geist (not the Alumni Sans heading font),
 // sized independently of PAGE_HEADING_CLASS — 34px is a compromise between
