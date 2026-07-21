@@ -8,7 +8,7 @@ export function CaptureFabButton({ className = "" }: { className?: string }) {
   return (
     <Link
       href="/capture"
-      aria-label="Записати нові задачі"
+      aria-label="Записати задачі"
       className={`pointer-events-auto flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full bg-zinc-900 text-3xl leading-none text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900 ${className}`}
     >
       +

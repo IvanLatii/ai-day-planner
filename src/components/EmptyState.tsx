@@ -26,7 +26,7 @@ const CONTENT: Record<
     accent: "blue",
     title: "Сьогодні задач немає",
     body: "Запиши все, що в голові — AI розбере на задачі.",
-    ctaLabel: "Записати",
+    ctaLabel: "Записати задачі",
     ctaHref: "/capture",
   },
   "today-has-inbox": {
@@ -42,7 +42,7 @@ const CONTENT: Record<
     accent: "amber",
     title: "Вхідних задач немає",
     body: "Запиши все, що в голові — AI розбере на задачі.",
-    ctaLabel: "Записати",
+    ctaLabel: "Записати задачі",
     ctaHref: "/capture",
   },
 };
