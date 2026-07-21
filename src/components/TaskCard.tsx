@@ -16,6 +16,14 @@ function XIcon({ className = "h-2.5 w-2.5" }: { className?: string }) {
   );
 }
 
+function MoveToTodayIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  );
+}
+
 // Fixed h-11 (not min-h-11) + no border keeps date/number/text inputs pixel
 // identical — native UA styling otherwise gives type=date extra intrinsic
 // height that a min-height alone doesn't override.
@@ -122,7 +130,10 @@ function TaskMeta({ task }: { task: Task }) {
         </span>
       )}
       {task.tags.map((tag) => (
-        <span key={tag} className="text-zinc-300 dark:text-zinc-600">
+        <span
+          key={tag}
+          className="rounded bg-zinc-100 px-1.5 py-0.5 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+        >
           #{tag}
         </span>
       ))}
@@ -130,8 +141,14 @@ function TaskMeta({ task }: { task: Task }) {
   );
 }
 
-export function InboxTaskCard({ task }: { task: Task }) {
-  const { cyclePriority } = useTasks();
+export function InboxTaskCard({
+  task,
+  onMove,
+}: {
+  task: Task;
+  onMove?: (task: Task) => void;
+}) {
+  const { cyclePriority, moveToToday } = useTasks();
   const router = useRouter();
 
   return (
@@ -156,6 +173,17 @@ export function InboxTaskCard({ task }: { task: Task }) {
             </p>
           )}
           <TaskMeta task={task} />
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            moveToToday(task.id);
+            onMove?.(task);
+          }}
+          aria-label="Перенести у Сьогодні"
+          className="flex min-h-11 min-w-11 shrink-0 items-center justify-center text-zinc-400 active:scale-95 dark:text-zinc-500"
+        >
+          <MoveToTodayIcon />
         </button>
         <PriorityChip priority={task.priority} onClick={() => cyclePriority(task.id)} />
       </div>

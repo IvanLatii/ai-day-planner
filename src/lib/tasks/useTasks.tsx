@@ -29,6 +29,7 @@ type TasksContextValue = {
   startDay: () => void;
   toggleDone: (id: string) => void;
   returnToInbox: (id: string) => void;
+  moveToToday: (id: string) => void;
   cyclePriority: (id: string) => void;
   updateTask: (id: string, patch: EditableFields) => void;
 };
@@ -128,6 +129,12 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const moveToToday = useCallback((id: string) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, status: "today" } : t))
+    );
+  }, []);
+
   const cyclePriority = useCallback((id: string) => {
     setTasks((prev) =>
       prev.map((t) =>
@@ -167,6 +174,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     startDay,
     toggleDone,
     returnToInbox,
+    moveToToday,
     cyclePriority,
     updateTask,
   };
