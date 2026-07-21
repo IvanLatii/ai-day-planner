@@ -32,6 +32,7 @@ type TasksContextValue = {
   moveToToday: (id: string) => void;
   cyclePriority: (id: string) => void;
   updateTask: (id: string, patch: EditableFields) => void;
+  deleteTask: (id: string) => void;
 };
 
 const TasksContext = createContext<TasksContextValue | null>(null);
@@ -149,6 +150,10 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const deleteTask = useCallback((id: string) => {
+    setTasks((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
   const inboxTasks = useMemo(
     () => sortInbox(tasks.filter((t) => t.status === "inbox")),
     [tasks]
@@ -177,6 +182,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     moveToToday,
     cyclePriority,
     updateTask,
+    deleteTask,
   };
 
   return (

@@ -1,14 +1,19 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { FIELD_CLASS, TagEditor } from "@/components/TaskCard";
 import { capitalize } from "@/lib/tasks/format";
-import { PAGE_HEADING_CLASS } from "@/lib/ui";
+import { DETAIL_TITLE_CLASS } from "@/lib/ui";
+
+const DELETE_CONFIRM_MS = 3000;
 
 const BACK_BUTTON_CLASS =
   "flex min-h-11 w-fit items-center gap-1.5 self-start rounded-md bg-zinc-100 px-6 text-sm font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300";
+
+const OUTLINE_BUTTON_CLASS =
+  "mt-auto flex h-[68px] items-center justify-center gap-2 rounded-md border-2 border-zinc-900 text-sm font-medium text-zinc-900 active:scale-95 dark:border-zinc-50 dark:text-zinc-50";
 
 function resizeToFit(el: HTMLTextAreaElement) {
   el.style.height = "auto";
@@ -38,7 +43,7 @@ function EditableTitle({
       onBlur={(e) => onCommit(e.target.value)}
       rows={1}
       aria-label="Назва задачі"
-      className={`min-w-0 flex-1 resize-none overflow-hidden border-none bg-transparent p-0 outline-none focus:ring-0 ${PAGE_HEADING_CLASS}`}
+      className={`min-w-0 flex-1 resize-none overflow-hidden border-none bg-transparent p-0 outline-none focus:ring-0 ${DETAIL_TITLE_CLASS}`}
     />
   );
 }
@@ -60,6 +65,14 @@ function ReturnIcon() {
   );
 }
 
+function ForwardIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  );
+}
+
 function CheckIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} className="h-4 w-4 text-white dark:text-zinc-900">
@@ -68,10 +81,31 @@ function CheckIcon() {
   );
 }
 
+function TrashIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"
+      />
+    </svg>
+  );
+}
+
 export default function TaskDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { isLoaded, getTask, toggleDone, returnToInbox, updateTask } = useTasks();
+  const { isLoaded, getTask, toggleDone, returnToInbox, moveToToday, updateTask, deleteTask } =
+    useTasks();
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const deleteTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (deleteTimerRef.current) window.clearTimeout(deleteTimerRef.current);
+    };
+  }, []);
 
   if (!isLoaded) return null;
 
@@ -93,9 +127,21 @@ export default function TaskDetailPage() {
   const isDone = task.status === "done";
   const hasQuote = task.source_text && task.source_text !== task.title;
 
+  function handleDeleteClick() {
+    if (!task) return;
+    if (!confirmingDelete) {
+      setConfirmingDelete(true);
+      deleteTimerRef.current = window.setTimeout(() => setConfirmingDelete(false), DELETE_CONFIRM_MS);
+      return;
+    }
+    if (deleteTimerRef.current) window.clearTimeout(deleteTimerRef.current);
+    deleteTask(task.id);
+    router.push("/");
+  }
+
   return (
-    <div className="flex flex-1 flex-col px-6 py-6">
-      <button type="button" onClick={() => router.back()} className={`${BACK_BUTTON_CLASS} mb-8`}>
+    <div className="flex flex-1 flex-col px-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-6">
+      <button type="button" onClick={() => router.back()} className={`${BACK_BUTTON_CLASS} mb-4`}>
         <BackIcon />
         Назад
       </button>
@@ -103,12 +149,16 @@ export default function TaskDetailPage() {
       <div className="flex flex-1 flex-col gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-start gap-2">
+            <EditableTitle
+              value={capitalize(task.title)}
+              onCommit={(title) => updateTask(task.id, { title })}
+            />
             {showCheckbox && (
               <button
                 type="button"
                 onClick={() => toggleDone(task.id)}
                 aria-label={isDone ? "Скасувати виконання" : "Позначити виконаною"}
-                className="-ml-2 mt-1 flex min-h-11 min-w-11 shrink-0 items-center justify-center"
+                className="-mr-2 mt-1 flex min-h-11 min-w-11 shrink-0 items-center justify-center"
               >
                 <span
                   className={`flex h-7 w-7 items-center justify-center rounded-full border-2 ${
@@ -121,10 +171,6 @@ export default function TaskDetailPage() {
                 </span>
               </button>
             )}
-            <EditableTitle
-              value={capitalize(task.title)}
-              onCommit={(title) => updateTask(task.id, { title })}
-            />
           </div>
 
           {hasQuote && (
@@ -180,12 +226,37 @@ export default function TaskDetailPage() {
           <button
             type="button"
             onClick={() => returnToInbox(task.id)}
-            className="mt-auto flex min-h-11 items-center justify-center gap-2 rounded-md border-2 border-zinc-900 text-sm font-medium text-zinc-900 active:scale-95 dark:border-zinc-50 dark:text-zinc-50"
+            className={OUTLINE_BUTTON_CLASS}
           >
             <ReturnIcon />
             Повернути у Вхідні
           </button>
         )}
+
+        {task.status === "inbox" && (
+          <button
+            type="button"
+            onClick={() => {
+              moveToToday(task.id);
+              router.push("/");
+            }}
+            className={OUTLINE_BUTTON_CLASS}
+          >
+            <ForwardIcon />
+            Перенести у Сьогодні
+          </button>
+        )}
+
+        <button
+          type="button"
+          onClick={handleDeleteClick}
+          className={`flex min-h-11 items-center justify-center gap-2 rounded-md text-sm font-medium text-rose-500 active:scale-95 ${
+            task.status === "done" ? "mt-auto" : ""
+          }`}
+        >
+          <TrashIcon />
+          {confirmingDelete ? "Точно видалити?" : "Видалити задачу"}
+        </button>
       </div>
     </div>
   );
