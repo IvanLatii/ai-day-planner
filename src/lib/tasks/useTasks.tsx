@@ -24,6 +24,7 @@ type TasksContextValue = {
   hasAnyTasks: boolean;
   inboxTasks: Task[];
   todayTasks: Task[];
+  getTask: (id: string) => Task | undefined;
   addFromCapture: (text: string) => Promise<CaptureResult>;
   startDay: () => void;
   toggleDone: (id: string) => void;
@@ -151,11 +152,17 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   );
   const hasAnyTasks = tasks.length > 0;
 
+  const getTask = useCallback(
+    (id: string) => tasks.find((t) => t.id === id),
+    [tasks]
+  );
+
   const value: TasksContextValue = {
     isLoaded,
     hasAnyTasks,
     inboxTasks,
     todayTasks,
+    getTask,
     addFromCapture,
     startDay,
     toggleDone,

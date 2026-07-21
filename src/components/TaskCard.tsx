@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { Task } from "@/lib/tasks/types";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { capitalize, formatDueDate, formatTimeEstimate } from "@/lib/tasks/format";
@@ -131,8 +132,8 @@ function TaskMeta({ task }: { task: Task }) {
 }
 
 export function InboxTaskCard({ task }: { task: Task }) {
-  const { cyclePriority, updateTask } = useTasks();
-  const [open, setOpen] = useState(false);
+  const { cyclePriority } = useTasks();
+  const router = useRouter();
 
   return (
     <div className="py-3">
@@ -140,7 +141,7 @@ export function InboxTaskCard({ task }: { task: Task }) {
         <button
           type="button"
           className="min-h-11 min-w-0 flex-1 text-left"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => router.push(`/task/${task.id}`)}
         >
           {task.unparsed && (
             <span className="mb-1 inline-block rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-700 dark:bg-orange-500/20 dark:text-orange-300">
@@ -159,58 +160,6 @@ export function InboxTaskCard({ task }: { task: Task }) {
         </button>
         <PriorityChip priority={task.priority} onClick={() => cyclePriority(task.id)} />
       </div>
-
-      {open && (
-        <div className="mt-3 space-y-3 border-t border-zinc-100 pt-3 dark:border-zinc-800">
-          <label className="block text-xs text-zinc-500">
-            Назва
-            <input
-              type="text"
-              defaultValue={task.title}
-              onBlur={(e) => updateTask(task.id, { title: e.target.value })}
-              className={FIELD_CLASS}
-            />
-          </label>
-          <div className="flex gap-2">
-            <label className="block min-w-0 flex-1 text-xs text-zinc-500">
-              Дедлайн
-              <input
-                type="date"
-                defaultValue={task.due_date ?? ""}
-                onChange={(e) =>
-                  updateTask(task.id, { due_date: e.target.value || undefined })
-                }
-                className={`${FIELD_CLASS} appearance-none [color-scheme:light] dark:[color-scheme:dark]`}
-              />
-            </label>
-            <label className="block min-w-0 flex-1 text-xs text-zinc-500">
-              Хвилин
-              <input
-                type="number"
-                min={0}
-                defaultValue={task.time_estimate_min ?? ""}
-                onBlur={(e) =>
-                  updateTask(task.id, {
-                    time_estimate_min: e.target.value
-                      ? Number(e.target.value)
-                      : undefined,
-                  })
-                }
-                className={`${FIELD_CLASS} appearance-none`}
-              />
-            </label>
-          </div>
-          <div className="text-xs text-zinc-500">
-            Теги
-            <div className="mt-1">
-              <TagEditor
-                tags={task.tags}
-                onChange={(tags) => updateTask(task.id, { tags })}
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -223,6 +172,7 @@ export function TodayTaskCard({
   onDone?: (task: Task) => void;
 }) {
   const { cyclePriority, toggleDone, returnToInbox } = useTasks();
+  const router = useRouter();
 
   return (
     <div className="flex items-center gap-1.5 py-3">
@@ -238,12 +188,16 @@ export function TodayTaskCard({
         <span className="h-6 w-6 rounded-full border-2 border-zinc-300 dark:border-zinc-600" />
       </button>
 
-      <div className="min-w-0 flex-1">
+      <button
+        type="button"
+        onClick={() => router.push(`/task/${task.id}`)}
+        className="min-w-0 flex-1 text-left"
+      >
         <p className="truncate font-medium text-zinc-900 dark:text-zinc-50">
           {capitalize(task.title)}
         </p>
         <TaskMeta task={task} />
-      </div>
+      </button>
 
       <div className="flex items-center gap-1">
         <PriorityChip priority={task.priority} onClick={() => cyclePriority(task.id)} />
