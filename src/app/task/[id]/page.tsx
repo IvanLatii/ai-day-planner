@@ -10,7 +10,12 @@ import { capitalize } from "@/lib/tasks/format";
 import { DETAIL_TITLE_CLASS } from "@/lib/ui";
 import type { Task } from "@/lib/tasks/types";
 
-const TOAST_DURATION_MS = 4000;
+// Shorter than the shared 4000ms elsewhere: this is the only toast that
+// also gates a navigation away from the current screen (to origin, see
+// handleDeleteClick below) — 4s of standing on a dead task's screen read
+// as sluggish. Other toasts (Виконано, Перенесено, Вхідні очищено) don't
+// navigate anywhere, so their 4000ms stays untouched.
+const TOAST_DURATION_MS = 2000;
 
 const BACK_BUTTON_CLASS =
   "flex min-h-11 w-fit items-center gap-1.5 self-start rounded-md bg-zinc-100 px-6 text-sm font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300";
