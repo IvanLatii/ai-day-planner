@@ -12,6 +12,15 @@ export function formatDueDate(iso: string): string {
   }).format(date);
 }
 
+export function formatTodayLabel(date: Date = new Date()): string {
+  const datePart = new Intl.DateTimeFormat("uk-UA", {
+    day: "numeric",
+    month: "short",
+  }).format(date);
+  const weekday = new Intl.DateTimeFormat("uk-UA", { weekday: "long" }).format(date);
+  return `${datePart} · ${capitalize(weekday)}`;
+}
+
 export function formatTimeEstimate(min: number): string {
   if (min < 60) return `${min} хв`;
   const h = Math.floor(min / 60);

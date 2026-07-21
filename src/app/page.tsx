@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { TodayTaskCard } from "@/components/TaskCard";
 import { EmptyState } from "@/components/EmptyState";
-import { pluralizeTasks } from "@/lib/tasks/format";
+import { formatTodayLabel, pluralizeTasks } from "@/lib/tasks/format";
 import { sortTodayByTime } from "@/lib/tasks/sort";
 import { PAGE_HEADING_CLASS } from "@/lib/ui";
 import type { Task } from "@/lib/tasks/types";
@@ -113,6 +113,7 @@ export default function TodayPage() {
     <div className="flex flex-1 flex-col gap-3 px-6 py-6">
       <div className="flex flex-col gap-1.5">
         <h1 className={PAGE_HEADING_CLASS}>Сьогодні</h1>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">{formatTodayLabel()}</p>
         {hasAnyTasks && inboxTasks.length > 0 && (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             У Вхідних ще {inboxTasks.length} {pluralizeTasks(inboxTasks.length)} на
