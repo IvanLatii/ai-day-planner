@@ -232,14 +232,14 @@ export default function CapturePage() {
             <button
               type="button"
               onClick={handleCancelRecording}
-              className="flex h-11 items-center justify-center rounded-md bg-zinc-100 text-sm font-medium text-zinc-700 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+              className="flex h-11 items-center justify-center rounded-md bg-zinc-100 px-6 text-sm font-medium text-zinc-700 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
             >
               Скасувати
             </button>
             <button
               type="button"
               onClick={handleConfirmRecording}
-              className="flex h-11 items-center justify-center rounded-md bg-zinc-100 text-sm font-medium text-zinc-700 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+              className="flex h-11 items-center justify-center rounded-md bg-zinc-100 px-6 text-sm font-medium text-zinc-700 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
             >
               Підтвердити
             </button>
@@ -248,25 +248,25 @@ export default function CapturePage() {
       )}
 
       {!listening && !showMergedMicButton && (text.length > 0 || voiceSupported) && (
-        <div className="flex items-center justify-end gap-2">
+        <div className={`grid gap-2 ${text.length > 0 ? "grid-cols-2" : "grid-cols-1"}`}>
           {text.length > 0 && (
             <button
               type="button"
               onClick={handleClear}
-              aria-label="Очистити поле"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-zinc-400 active:scale-95 dark:text-zinc-500"
+              className="flex h-11 items-center justify-center gap-1.5 rounded-md bg-zinc-100 px-6 text-sm font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
             >
               <ClearIcon />
+              Очистити
             </button>
           )}
           {voiceSupported && (
             <button
               type="button"
               onClick={handleStartRecording}
-              aria-label="Диктувати голосом"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-600 shadow-sm active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+              className="flex h-11 items-center justify-center gap-1.5 rounded-md bg-zinc-100 px-6 text-sm font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
             >
               <MicIcon />
+              Диктувати
             </button>
           )}
         </div>
