@@ -20,6 +20,13 @@ const STYLE: Record<Priority, string> = {
   low: "bg-slate-100 text-slate-600 dark:bg-slate-500/20 dark:text-slate-300",
 };
 
+// Today-list checkbox border color — priority-as-color instead of a chip.
+export const PRIORITY_CHECKBOX_BORDER: Record<Priority, string> = {
+  high: "border-rose-500 dark:border-rose-400",
+  medium: "border-amber-500 dark:border-amber-400",
+  low: "border-zinc-300 dark:border-zinc-600",
+};
+
 export function PriorityChip({
   priority,
   onClick,

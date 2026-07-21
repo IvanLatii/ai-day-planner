@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Task } from "@/lib/tasks/types";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { capitalize, formatDueDate, formatTimeEstimate } from "@/lib/tasks/format";
-import { PriorityChip } from "./PriorityChip";
+import { PriorityChip, PRIORITY_CHECKBOX_BORDER } from "./PriorityChip";
 import { TodayIcon, ClockIcon } from "./icons";
 
 function XIcon({ className = "h-2.5 w-2.5" }: { className?: string }) {
@@ -162,7 +162,7 @@ export function TodayTaskCard({
   task: Task;
   onDone?: (task: Task) => void;
 }) {
-  const { cyclePriority, toggleDone } = useTasks();
+  const { toggleDone } = useTasks();
   const router = useRouter();
 
   return (
@@ -176,7 +176,9 @@ export function TodayTaskCard({
         aria-label="Позначити виконаною"
         className="flex min-h-11 min-w-11 shrink-0 items-center justify-center"
       >
-        <span className="h-6 w-6 rounded-full border-2 border-zinc-300 dark:border-zinc-600" />
+        <span
+          className={`h-6 w-6 rounded-full border-2 ${PRIORITY_CHECKBOX_BORDER[task.priority]}`}
+        />
       </button>
 
       <button
@@ -189,8 +191,6 @@ export function TodayTaskCard({
         </p>
         <TaskMeta task={task} />
       </button>
-
-      <PriorityChip priority={task.priority} onClick={() => cyclePriority(task.id)} />
     </div>
   );
 }
