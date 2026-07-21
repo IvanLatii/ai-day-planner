@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { useVoiceDictation } from "@/lib/voice/useVoiceDictation";
@@ -49,22 +49,33 @@ function MicIcon() {
   );
 }
 
-function CheckIcon() {
+function SparkleIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-5 w-5">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"
+      />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M18.5 14.5l.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6.6-1.7Z"
+      />
     </svg>
   );
 }
 
+// Bigger than before (h-5/w-1 vs h-3/w-0.5) so it reads as a real
+// recording indicator rather than a decorative accent.
 function WaveformIcon() {
   const delays = ["0ms", "150ms", "300ms", "450ms"];
   return (
-    <span className="flex h-3 items-end gap-0.5" aria-hidden>
+    <span className="flex h-5 items-end gap-1" aria-hidden>
       {delays.map((delay) => (
         <span
           key={delay}
-          className="voice-wave-bar h-full w-0.5 rounded-full bg-rose-500"
+          className="voice-wave-bar h-full w-1 rounded-full bg-rose-500"
           style={{ animationDelay: delay }}
         />
       ))}
@@ -72,21 +83,18 @@ function WaveformIcon() {
   );
 }
 
-// Bigger equalizer that sits directly above the action button while
-// recording — distinct from the small inline WaveformIcon next to
-// "Слухаю…", which stays where it is.
-function EqualizerBar() {
-  const delays = ["0ms", "100ms", "200ms", "300ms", "400ms", "300ms", "200ms", "100ms"];
+function LoadingDots() {
+  const delays = ["0ms", "200ms", "400ms"];
   return (
-    <div className="flex h-6 items-end justify-center gap-1" aria-hidden>
-      {delays.map((delay, i) => (
+    <span className="flex items-center gap-1" aria-hidden>
+      {delays.map((delay) => (
         <span
-          key={i}
-          className="voice-wave-bar h-full w-1 rounded-full bg-rose-500"
+          key={delay}
+          className="pulse-dot h-1.5 w-1.5 rounded-full bg-rose-500"
           style={{ animationDelay: delay }}
         />
       ))}
-    </div>
+    </span>
   );
 }
 
@@ -106,6 +114,7 @@ export default function CapturePage() {
   const [error, setError] = useState<string | null>(null);
   const [shake, setShake] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const recordingSnapshotRef = useRef("");
 
   const handleTranscript = useCallback((chunk: string) => {
     setText((prev) => (prev ? `${prev} ${chunk}` : chunk));
@@ -123,6 +132,20 @@ export default function CapturePage() {
 
   const showInterim = listening && interimText.length > 0;
   const showMergedMicButton = !listening && text.trim().length === 0 && voiceSupported;
+
+  function handleStartRecording() {
+    recordingSnapshotRef.current = text;
+    startVoice();
+  }
+
+  function handleCancelRecording() {
+    stopVoice();
+    setText(recordingSnapshotRef.current);
+  }
+
+  function handleConfirmRecording() {
+    stopVoice();
+  }
 
   function handleClear() {
     setText("");
@@ -199,52 +222,53 @@ export default function CapturePage() {
         )}
       </div>
 
-      {(voiceSupported || text.length > 0) && !showMergedMicButton && (
-        <div className="flex items-center justify-between">
-          <span className="flex items-center gap-1.5 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-            {listening && (
-              <>
-                <WaveformIcon />
-                Слухаю…
-              </>
-            )}
-          </span>
-
-          <div className="flex items-center gap-2">
-            {listening ? (
-              <button
-                type="button"
-                onClick={stopVoice}
-                aria-label="Завершити диктування"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-700 text-white shadow-sm active:scale-95 dark:bg-zinc-300 dark:text-zinc-900"
-              >
-                <CheckIcon />
-              </button>
-            ) : (
-              <>
-                {text.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={handleClear}
-                    aria-label="Очистити поле"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-zinc-400 active:scale-95 dark:text-zinc-500"
-                  >
-                    <ClearIcon />
-                  </button>
-                )}
-                {voiceSupported && (
-                  <button
-                    type="button"
-                    onClick={startVoice}
-                    aria-label="Диктувати голосом"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-600 shadow-sm active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
-                  >
-                    <MicIcon />
-                  </button>
-                )}
-              </>
-            )}
+      {listening && (
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+            <WaveformIcon />
+            Слухаю…
           </div>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={handleCancelRecording}
+              className="flex h-11 items-center justify-center rounded-md bg-zinc-100 text-sm font-medium text-zinc-700 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+            >
+              Скасувати
+            </button>
+            <button
+              type="button"
+              onClick={handleConfirmRecording}
+              className="flex h-11 items-center justify-center rounded-md bg-zinc-100 text-sm font-medium text-zinc-700 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+            >
+              Підтвердити
+            </button>
+          </div>
+        </div>
+      )}
+
+      {!listening && !showMergedMicButton && (text.length > 0 || voiceSupported) && (
+        <div className="flex items-center justify-end gap-2">
+          {text.length > 0 && (
+            <button
+              type="button"
+              onClick={handleClear}
+              aria-label="Очистити поле"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-zinc-400 active:scale-95 dark:text-zinc-500"
+            >
+              <ClearIcon />
+            </button>
+          )}
+          {voiceSupported && (
+            <button
+              type="button"
+              onClick={handleStartRecording}
+              aria-label="Диктувати голосом"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-600 shadow-sm active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+            >
+              <MicIcon />
+            </button>
+          )}
         </div>
       )}
 
@@ -268,34 +292,44 @@ export default function CapturePage() {
         </div>
       )}
 
-      {listening && (
-        <div className="flex justify-center">
-          <EqualizerBar />
-        </div>
-      )}
-
-      {showMergedMicButton ? (
+      {listening ? (
         <button
           type="button"
-          onClick={startVoice}
+          disabled
+          className="flex h-[68px] w-full items-center justify-center rounded-md bg-zinc-900 text-sm font-semibold text-white opacity-60 dark:bg-zinc-50 dark:text-zinc-900"
+        >
+          Записую
+        </button>
+      ) : showMergedMicButton ? (
+        <button
+          type="button"
+          onClick={handleStartRecording}
           className="flex h-[68px] w-full items-center justify-center gap-3 rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900"
         >
           <MicIcon />
-          Записати задачу
+          Записати задачі
         </button>
       ) : (
         <button
           type="button"
           onClick={handleSubmitClick}
-          className={`h-[68px] w-full rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
+          className={`flex h-[68px] w-full items-center justify-center gap-2 rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
             shake ? "animate-shake" : ""
           }`}
         >
-          {status === "loading"
-            ? "Розбираю..."
-            : status === "error"
-              ? "Спробувати ще раз"
-              : "Розібрати на задачі"}
+          {status === "loading" ? (
+            <>
+              Розбираю...
+              <LoadingDots />
+            </>
+          ) : status === "error" ? (
+            "Спробувати ще раз"
+          ) : (
+            <>
+              <SparkleIcon />
+              Розібрати на задачі
+            </>
+          )}
         </button>
       )}
     </div>

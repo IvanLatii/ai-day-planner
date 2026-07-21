@@ -64,6 +64,15 @@ body {
   transform-origin: center;
 }
 
+@keyframes pulse-dot {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.75); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+.pulse-dot {
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
 /* Shared width cap for the main content column and every fixed
    overlay (tab bar, FAB, toasts) so they stay aligned on wide
    screens instead of drifting to the edges of the window. */
