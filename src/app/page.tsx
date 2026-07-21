@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { TodayTaskCard } from "@/components/TaskCard";
 import { EmptyState } from "@/components/EmptyState";
-import { capitalize, pluralizeTasks } from "@/lib/tasks/format";
+import { pluralizeTasks } from "@/lib/tasks/format";
 import { sortTodayByTime } from "@/lib/tasks/sort";
 import { PAGE_HEADING_CLASS } from "@/lib/ui";
 import type { Task } from "@/lib/tasks/types";
@@ -45,14 +45,22 @@ function SortModeToggle({
   );
 }
 
-function DoneToast({ task, onUndo }: { task: Task; onUndo: () => void }) {
+function UndoIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 14 4 9l5-5" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
+    </svg>
+  );
+}
+
+function DoneToast({ onUndo }: { onUndo: () => void }) {
   return (
     <div className="fixed inset-x-0 bottom-[calc(68px+env(safe-area-inset-bottom))] z-20 flex justify-center px-4">
-      <div className="flex max-w-sm items-center gap-3 rounded-xl bg-zinc-900 px-4 py-3 text-sm text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900">
-        <span className="min-w-0 flex-1 truncate">
-          Виконано: {capitalize(task.title)}
-        </span>
-        <button type="button" onClick={onUndo} className="shrink-0 font-semibold underline underline-offset-2">
+      <div className="flex w-full items-center justify-between gap-3 rounded-md bg-zinc-700 px-4 py-3 text-sm text-white shadow-lg dark:bg-zinc-300 dark:text-zinc-900">
+        <span className="font-medium">Виконано</span>
+        <button type="button" onClick={onUndo} className="flex shrink-0 items-center gap-1.5 font-semibold">
+          <UndoIcon />
           Відмінити
         </button>
       </div>
@@ -96,7 +104,7 @@ export default function TodayPage() {
     return (
       <>
         <EmptyState variant={inboxTasks.length > 0 ? "today-has-inbox" : "today-new"} />
-        {doneToast && <DoneToast task={doneToast} onUndo={handleUndo} />}
+        {doneToast && <DoneToast onUndo={handleUndo} />}
       </>
     );
   }
@@ -118,7 +126,7 @@ export default function TodayPage() {
           <TodayTaskCard key={task.id} task={task} onDone={handleDone} />
         ))}
       </div>
-      {doneToast && <DoneToast task={doneToast} onUndo={handleUndo} />}
+      {doneToast && <DoneToast onUndo={handleUndo} />}
     </div>
   );
 }
