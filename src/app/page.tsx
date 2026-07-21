@@ -4,7 +4,8 @@ import { useCallback, useRef, useState } from "react";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { TodayTaskCard } from "@/components/TaskCard";
 import { EmptyState } from "@/components/EmptyState";
-import { capitalize } from "@/lib/tasks/format";
+import { capitalize, pluralizeTasks } from "@/lib/tasks/format";
+import { PAGE_HEADING_CLASS } from "@/lib/ui";
 import type { Task } from "@/lib/tasks/types";
 
 const TOAST_DURATION_MS = 4000;
@@ -54,16 +55,16 @@ export default function TodayPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-3 px-4 py-6">
-      <h1 className="font-heading text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-        Сьогодні
-      </h1>
-      {hasAnyTasks && inboxTasks.length > 0 && (
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          У Вхідних ще {inboxTasks.length} задач{inboxTasks.length === 1 ? "а" : ""}{" "}
-          на розгляд.
-        </p>
-      )}
+    <div className="flex flex-1 flex-col gap-3 px-6 py-6">
+      <div className="flex flex-col gap-1.5">
+        <h1 className={PAGE_HEADING_CLASS}>Сьогодні</h1>
+        {hasAnyTasks && inboxTasks.length > 0 && (
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            У Вхідних ще {inboxTasks.length} {pluralizeTasks(inboxTasks.length)} на
+            розгляд.
+          </p>
+        )}
+      </div>
       <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800">
         {todayTasks.map((task) => (
           <TodayTaskCard key={task.id} task={task} onDone={handleDone} />

@@ -57,14 +57,14 @@ export function TagEditor({
       {tags.map((tag) => (
         <span
           key={tag}
-          className="flex items-center gap-1 rounded-full bg-zinc-100 py-1.5 pl-3 pr-2 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+          className="flex h-8 items-center gap-1 rounded-full bg-zinc-100 pl-3 pr-1.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
         >
           #{tag}
           <button
             type="button"
             onClick={() => remove(tag)}
             aria-label={`Видалити тег ${tag}`}
-            className="-m-1 flex h-7 w-7 items-center justify-center rounded-full text-zinc-400 active:scale-95 dark:text-zinc-500"
+            className="-m-1 flex h-6 w-6 items-center justify-center rounded-full text-zinc-400 active:scale-95 dark:text-zinc-500"
           >
             <XIcon />
           </button>
@@ -88,14 +88,14 @@ export function TagEditor({
           }}
           onBlur={commit}
           placeholder="тег"
-          className="h-9 w-24 rounded-full bg-zinc-100 px-3 text-xs text-zinc-900 outline-none dark:bg-zinc-800 dark:text-zinc-50"
+          className="h-8 w-24 rounded-full bg-zinc-100 px-3 text-xs text-zinc-900 outline-none dark:bg-zinc-800 dark:text-zinc-50"
         />
       ) : (
         <button
           type="button"
           onClick={() => setAdding(true)}
           aria-label="Додати тег"
-          className="flex h-9 min-w-9 items-center justify-center rounded-full bg-zinc-100 px-3 text-sm font-medium text-zinc-500 active:scale-95 dark:bg-zinc-800 dark:text-zinc-400"
+          className="flex h-8 min-w-8 items-center justify-center rounded-full bg-zinc-100 px-3 text-sm font-medium text-zinc-500 active:scale-95 dark:bg-zinc-800 dark:text-zinc-400"
         >
           +
         </button>

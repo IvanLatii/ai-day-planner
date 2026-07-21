@@ -1,13 +1,51 @@
 "use client";
 
+import { useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { FIELD_CLASS, TagEditor } from "@/components/TaskCard";
 import { capitalize } from "@/lib/tasks/format";
+import { PAGE_HEADING_CLASS } from "@/lib/ui";
+
+const BACK_BUTTON_CLASS =
+  "flex min-h-11 w-fit items-center gap-1.5 self-start rounded-md bg-zinc-100 px-3 text-sm font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300";
+
+function resizeToFit(el: HTMLTextAreaElement) {
+  el.style.height = "auto";
+  el.style.height = `${el.scrollHeight}px`;
+}
+
+// Plain <input> can't wrap, so a long title just runs off-screen. A
+// single-row textarea that grows with content wraps like the old <h1>
+// did, while still behaving as a tap-to-edit field (Todoist-style).
+function EditableTitle({
+  value,
+  onCommit,
+}: {
+  value: string;
+  onCommit: (value: string) => void;
+}) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+
+  return (
+    <textarea
+      ref={(el) => {
+        ref.current = el;
+        if (el) resizeToFit(el);
+      }}
+      defaultValue={value}
+      onInput={(e) => resizeToFit(e.currentTarget)}
+      onBlur={(e) => onCommit(e.target.value)}
+      rows={1}
+      aria-label="Назва задачі"
+      className={`min-w-0 flex-1 resize-none overflow-hidden border-none bg-transparent p-0 outline-none focus:ring-0 ${PAGE_HEADING_CLASS}`}
+    />
+  );
+}
 
 function BackIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
     </svg>
   );
@@ -41,13 +79,10 @@ export default function TaskDetailPage() {
 
   if (!task) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-16 text-center">
+      <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 py-16 text-center">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">Задачу не знайдено.</p>
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="min-h-11 rounded-xl bg-zinc-100 px-5 text-sm font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-        >
+        <button type="button" onClick={() => router.back()} className={BACK_BUTTON_CLASS}>
+          <BackIcon />
           Назад
         </button>
       </div>
@@ -56,58 +91,52 @@ export default function TaskDetailPage() {
 
   const showCheckbox = task.status !== "inbox";
   const isDone = task.status === "done";
+  const hasQuote = task.source_text && task.source_text !== task.title;
 
   return (
-    <div className="flex flex-1 flex-col gap-4 px-4 py-6">
-      <button
-        type="button"
-        onClick={() => router.back()}
-        aria-label="Назад"
-        className="-ml-2.5 flex min-h-11 min-w-11 items-center justify-center self-start rounded-full text-zinc-500 active:scale-95 dark:text-zinc-400"
-      >
+    <div className="flex flex-1 flex-col gap-4 px-6 py-6">
+      <button type="button" onClick={() => router.back()} className={BACK_BUTTON_CLASS}>
         <BackIcon />
+        Назад
       </button>
 
-      <div className="flex items-start gap-3">
-        {showCheckbox && (
-          <button
-            type="button"
-            onClick={() => toggleDone(task.id)}
-            aria-label={isDone ? "Скасувати виконання" : "Позначити виконаною"}
-            className="mt-0.5 flex min-h-11 min-w-11 shrink-0 items-center justify-center"
-          >
-            <span
-              className={`flex h-7 w-7 items-center justify-center rounded-full border-2 ${
-                isDone
-                  ? "border-zinc-900 bg-zinc-900 dark:border-zinc-50 dark:bg-zinc-50"
-                  : "border-zinc-300 dark:border-zinc-600"
-              }`}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-start gap-3">
+          {showCheckbox && (
+            <button
+              type="button"
+              onClick={() => toggleDone(task.id)}
+              aria-label={isDone ? "Скасувати виконання" : "Позначити виконаною"}
+              className="mt-1 flex min-h-11 min-w-11 shrink-0 items-center justify-center"
             >
-              {isDone && <CheckIcon />}
-            </span>
-          </button>
+              <span
+                className={`flex h-7 w-7 items-center justify-center rounded-full border-2 ${
+                  isDone
+                    ? "border-zinc-900 bg-zinc-900 dark:border-zinc-50 dark:bg-zinc-50"
+                    : "border-zinc-300 dark:border-zinc-600"
+                }`}
+              >
+                {isDone && <CheckIcon />}
+              </span>
+            </button>
+          )}
+          <EditableTitle
+            value={capitalize(task.title)}
+            onCommit={(title) => updateTask(task.id, { title })}
+          />
+        </div>
+
+        {hasQuote && (
+          <div className="text-xs text-zinc-500 dark:text-zinc-400">
+            Оригінальний запис
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              &ldquo;{task.source_text}&rdquo;
+            </p>
+          </div>
         )}
-        <h1 className="mt-0.5 min-w-0 flex-1 font-heading text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-          {capitalize(task.title)}
-        </h1>
       </div>
 
-      {task.source_text && task.source_text !== task.title && (
-        <p className="text-sm italic text-zinc-400 dark:text-zinc-500">
-          &ldquo;{task.source_text}&rdquo;
-        </p>
-      )}
-
       <div className="space-y-3 border-t border-zinc-100 pt-4 dark:border-zinc-800">
-        <label className="block text-xs text-zinc-500">
-          Назва
-          <input
-            type="text"
-            defaultValue={task.title}
-            onBlur={(e) => updateTask(task.id, { title: e.target.value })}
-            className={FIELD_CLASS}
-          />
-        </label>
         <div className="flex gap-2">
           <label className="block min-w-0 flex-1 text-xs text-zinc-500">
             Дедлайн
@@ -125,6 +154,7 @@ export default function TaskDetailPage() {
             <input
               type="number"
               min={0}
+              placeholder="напр. 30"
               defaultValue={task.time_estimate_min ?? ""}
               onBlur={(e) =>
                 updateTask(task.id, {
@@ -152,7 +182,7 @@ export default function TaskDetailPage() {
         <button
           type="button"
           onClick={() => returnToInbox(task.id)}
-          className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-zinc-100 text-sm font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+          className="flex min-h-11 items-center justify-center gap-2 rounded-md bg-zinc-100 text-sm font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
         >
           <ReturnIcon />
           Повернути у Вхідні

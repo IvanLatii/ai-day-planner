@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { useVoiceDictation } from "@/lib/voice/useVoiceDictation";
+import { PAGE_HEADING_CLASS } from "@/lib/ui";
 
 const ERROR_MESSAGES: Record<string, string> = {
   missing_api_key: "AI тимчасово недоступний (немає ключа). Спробуй пізніше.",
@@ -142,20 +143,18 @@ export default function CapturePage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 px-4 pb-4 pt-6">
+    <div className="flex flex-1 flex-col gap-4 px-6 pb-0 pt-6">
       <div className="flex flex-col gap-1">
         <button
           type="button"
           onClick={() => router.back()}
-          className="flex min-h-11 w-fit items-center gap-1 text-sm font-medium text-zinc-500 dark:text-zinc-400"
+          className="flex min-h-11 w-fit items-center gap-1.5 rounded-md bg-zinc-100 px-3 text-sm font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
         >
           <BackIcon />
           Назад
         </button>
 
-        <h1 className="font-heading text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-          Що в голові?
-        </h1>
+        <h1 className={PAGE_HEADING_CLASS}>Що в голові?</h1>
       </div>
 
       <div className="flex flex-1 flex-col">
@@ -198,7 +197,7 @@ export default function CapturePage() {
                 type="button"
                 onClick={stopVoice}
                 aria-label="Завершити диктування"
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zinc-700 text-white shadow-sm active:scale-95 dark:bg-zinc-300 dark:text-zinc-900"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-700 text-white shadow-sm active:scale-95 dark:bg-zinc-300 dark:text-zinc-900"
               >
                 <CheckIcon />
               </button>
@@ -209,7 +208,7 @@ export default function CapturePage() {
                     type="button"
                     onClick={handleClear}
                     aria-label="Очистити поле"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-600 shadow-sm active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-600 shadow-sm active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
                   >
                     <ClearIcon />
                   </button>
@@ -219,7 +218,7 @@ export default function CapturePage() {
                     type="button"
                     onClick={startVoice}
                     aria-label="Диктувати голосом"
-                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-zinc-900 text-zinc-900 active:scale-95 dark:border-zinc-50 dark:text-zinc-50"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-600 shadow-sm active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
                   >
                     <MicIcon />
                   </button>
@@ -253,7 +252,7 @@ export default function CapturePage() {
       <button
         type="button"
         onClick={handleSubmitClick}
-        className={`h-14 w-full rounded-xl bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
+        className={`h-14 w-full rounded-md bg-zinc-900 text-sm font-semibold text-white dark:bg-zinc-50 dark:text-zinc-900 ${
           shake ? "animate-shake" : ""
         }`}
       >

@@ -30,7 +30,7 @@ function TabLink({
         {icon}
         {label}
         {!!badge && badge > 0 && (
-          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white">
+          <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-zinc-700 px-1 text-[10px] font-semibold leading-none text-white dark:bg-zinc-300 dark:text-zinc-900">
             {badge}
           </span>
         )}
@@ -42,6 +42,8 @@ function TabLink({
 export function TabBar() {
   const pathname = usePathname();
   const { inboxTasks } = useTasks();
+
+  if (pathname.startsWith("/task/")) return null;
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-10 flex border-t border-zinc-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">

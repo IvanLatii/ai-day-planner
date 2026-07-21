@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { InboxTaskCard } from "@/components/TaskCard";
 import { EmptyState } from "@/components/EmptyState";
+import { PAGE_HEADING_CLASS } from "@/lib/ui";
 
 export default function InboxPage() {
   const { isLoaded, inboxTasks, startDay } = useTasks();
@@ -16,24 +17,22 @@ export default function InboxPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-3 px-4 py-6">
-      <h1 className="font-heading text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-        Вхідні
-      </h1>
+    <div className="flex flex-1 flex-col gap-3 px-6 py-6">
+      <h1 className={PAGE_HEADING_CLASS}>Вхідні</h1>
       <div className="flex flex-col divide-y divide-zinc-100 pb-20 dark:divide-zinc-800">
         {inboxTasks.map((task) => (
           <InboxTaskCard key={task.id} task={task} />
         ))}
       </div>
 
-      <div className="fixed inset-x-0 bottom-[calc(68px+env(safe-area-inset-bottom))] z-10 flex justify-center pl-4 pr-24">
+      <div className="fixed inset-x-0 bottom-[calc(68px+env(safe-area-inset-bottom))] z-10 flex justify-center pl-6 pr-24">
         <button
           type="button"
           onClick={() => {
             startDay();
             router.push("/");
           }}
-          className="min-h-11 w-full max-w-sm rounded-xl bg-zinc-900 text-sm font-semibold text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900"
+          className="min-h-11 w-full max-w-sm rounded-md bg-zinc-900 text-sm font-semibold text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900"
         >
           Підтвердити задачі
         </button>
