@@ -24,15 +24,15 @@ const CONTENT: Record<
   "today-new": {
     icon: <TodayIcon className="h-8 w-8" />,
     accent: "blue",
-    title: "На сьогодні задач немає",
-    body: "Скинь усе, що в голові — AI розбере на задачі.",
+    title: "Сьогодні задач немає",
+    body: "Запиши все, що в голові — AI розбере на задачі.",
     ctaLabel: "Записати",
     ctaHref: "/capture",
   },
   "today-has-inbox": {
     icon: <InboxIcon className="h-8 w-8" />,
     accent: "blue",
-    title: "Задачі у Вхідних",
+    title: "Задачі чекають у Вхідних",
     body: "Переглянь і підтверди — вони стануть планом на сьогодні.",
     ctaLabel: "Перейти у Вхідні",
     ctaHref: "/inbox",
@@ -40,8 +40,8 @@ const CONTENT: Record<
   "inbox-empty": {
     icon: <InboxIcon className="h-8 w-8" />,
     accent: "amber",
-    title: "Вхідні порожні",
-    body: "Скинь усе, що в голові — AI розбере на задачі.",
+    title: "Вхідних задач немає",
+    body: "Запиши все, що в голові — AI розбере на задачі.",
     ctaLabel: "Записати",
     ctaHref: "/capture",
   },
@@ -56,7 +56,7 @@ export function EmptyState({ variant }: { variant: Variant }) {
       >
         {icon}
       </div>
-      <h2 className={`mb-1 ${PAGE_HEADING_CLASS}`}>{title}</h2>
+      <h2 className={`mb-3 ${PAGE_HEADING_CLASS}`}>{title}</h2>
       <p className="mb-10 max-w-xs text-sm text-zinc-500 dark:text-zinc-400">{body}</p>
       <Link
         href={ctaHref}
