@@ -18,6 +18,17 @@ export function sortToday(tasks: Task[]): Task[] {
   });
 }
 
+// time_estimate_min ↑ (missing estimate sorts last), then priority ↓
+export function sortTodayByTime(tasks: Task[]): Task[] {
+  return [...tasks].sort((a, b) => {
+    const aTime = a.time_estimate_min ?? Infinity;
+    const bTime = b.time_estimate_min ?? Infinity;
+    if (aTime !== bTime) return aTime - bTime;
+
+    return PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority];
+  });
+}
+
 // unparsed:true first (needs attention), then newest first
 export function sortInbox(tasks: Task[]): Task[] {
   return [...tasks].sort((a, b) => {

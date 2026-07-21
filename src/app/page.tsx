@@ -1,14 +1,49 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { TodayTaskCard } from "@/components/TaskCard";
 import { EmptyState } from "@/components/EmptyState";
 import { capitalize, pluralizeTasks } from "@/lib/tasks/format";
+import { sortTodayByTime } from "@/lib/tasks/sort";
 import { PAGE_HEADING_CLASS } from "@/lib/ui";
 import type { Task } from "@/lib/tasks/types";
 
 const TOAST_DURATION_MS = 4000;
+const SORT_MODE_KEY = "ai-day-planner:today-sort";
+type SortMode = "priority" | "time";
+
+function SortModeToggle({
+  mode,
+  onChange,
+}: {
+  mode: SortMode;
+  onChange: (mode: SortMode) => void;
+}) {
+  return (
+    <div className="flex w-fit self-start rounded-md bg-zinc-100 p-1 dark:bg-zinc-800">
+      {(
+        [
+          ["priority", "За пріоритетом"],
+          ["time", "За часом"],
+        ] as const
+      ).map(([value, label]) => (
+        <button
+          key={value}
+          type="button"
+          onClick={() => onChange(value)}
+          className={`h-7 rounded px-3 text-xs font-medium transition-colors ${
+            mode === value
+              ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-50"
+              : "text-zinc-500 dark:text-zinc-400"
+          }`}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 function DoneToast({ task, onUndo }: { task: Task; onUndo: () => void }) {
   return (
@@ -29,6 +64,18 @@ export default function TodayPage() {
   const { isLoaded, hasAnyTasks, inboxTasks, todayTasks, toggleDone } = useTasks();
   const [doneToast, setDoneToast] = useState<Task | null>(null);
   const toastTimerRef = useRef<number | null>(null);
+  const [sortMode, setSortMode] = useState<SortMode>("priority");
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem(SORT_MODE_KEY);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (stored === "time") setSortMode("time");
+  }, []);
+
+  const handleSortChange = useCallback((mode: SortMode) => {
+    setSortMode(mode);
+    window.localStorage.setItem(SORT_MODE_KEY, mode);
+  }, []);
 
   const handleDone = useCallback((task: Task) => {
     if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
@@ -65,8 +112,9 @@ export default function TodayPage() {
           </p>
         )}
       </div>
+      <SortModeToggle mode={sortMode} onChange={handleSortChange} />
       <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800">
-        {todayTasks.map((task) => (
+        {(sortMode === "time" ? sortTodayByTime(todayTasks) : todayTasks).map((task) => (
           <TodayTaskCard key={task.id} task={task} onDone={handleDone} />
         ))}
       </div>
