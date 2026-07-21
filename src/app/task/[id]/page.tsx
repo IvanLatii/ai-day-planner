@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { FIELD_CLASS, TagEditor } from "@/components/TaskCard";
+import { PriorityChip } from "@/components/PriorityChip";
 import { UndoToast } from "@/components/UndoToast";
 import { capitalize } from "@/lib/tasks/format";
 import { DETAIL_TITLE_CLASS } from "@/lib/ui";
@@ -104,6 +105,7 @@ export default function TaskDetailPage() {
     toggleDone,
     returnToInbox,
     moveToToday,
+    cyclePriority,
     updateTask,
     deleteTask,
     restoreTask,
@@ -199,6 +201,15 @@ export default function TaskDetailPage() {
         </div>
 
         <div className="space-y-3 border-t border-zinc-100 pt-4 dark:border-zinc-800">
+          <div className="text-xs text-zinc-500">
+            Пріоритет
+            <div className="mt-1">
+              <PriorityChip
+                priority={task.priority}
+                onClick={() => cyclePriority(task.id)}
+              />
+            </div>
+          </div>
           <div className="flex gap-2">
             <label className="block min-w-0 flex-1 text-xs text-zinc-500">
               Дедлайн
