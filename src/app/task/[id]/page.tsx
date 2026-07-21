@@ -4,10 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 import { FIELD_CLASS, TagEditor } from "@/components/TaskCard";
+import { UndoToast } from "@/components/UndoToast";
 import { capitalize } from "@/lib/tasks/format";
 import { DETAIL_TITLE_CLASS } from "@/lib/ui";
+import type { Task } from "@/lib/tasks/types";
 
-const DELETE_CONFIRM_MS = 3000;
+const TOAST_DURATION_MS = 4000;
 
 const BACK_BUTTON_CLASS =
   "flex min-h-11 w-fit items-center gap-1.5 self-start rounded-md bg-zinc-100 px-6 text-sm font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300";
@@ -96,20 +98,31 @@ function TrashIcon() {
 export default function TaskDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { isLoaded, getTask, toggleDone, returnToInbox, moveToToday, updateTask, deleteTask } =
-    useTasks();
-  const [confirmingDelete, setConfirmingDelete] = useState(false);
-  const deleteTimerRef = useRef<number | null>(null);
+  const {
+    isLoaded,
+    getTask,
+    toggleDone,
+    returnToInbox,
+    moveToToday,
+    updateTask,
+    deleteTask,
+    restoreTask,
+  } = useTasks();
+  const [deletedToast, setDeletedToast] = useState<Task | null>(null);
+  const toastTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     return () => {
-      if (deleteTimerRef.current) window.clearTimeout(deleteTimerRef.current);
+      if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
     };
   }, []);
 
   if (!isLoaded) return null;
 
-  const task = getTask(id);
+  // Right after delete, getTask(id) returns undefined — deletedToast keeps
+  // the last-known task on screen for the length of the undo window instead
+  // of falling through to the "not found" state.
+  const task = deletedToast ?? getTask(id);
 
   if (!task) {
     return (
@@ -129,14 +142,19 @@ export default function TaskDetailPage() {
 
   function handleDeleteClick() {
     if (!task) return;
-    if (!confirmingDelete) {
-      setConfirmingDelete(true);
-      deleteTimerRef.current = window.setTimeout(() => setConfirmingDelete(false), DELETE_CONFIRM_MS);
-      return;
-    }
-    if (deleteTimerRef.current) window.clearTimeout(deleteTimerRef.current);
+    setDeletedToast(task);
     deleteTask(task.id);
-    router.push("/");
+    toastTimerRef.current = window.setTimeout(() => {
+      setDeletedToast(null);
+      router.push("/");
+    }, TOAST_DURATION_MS);
+  }
+
+  function handleUndoDelete() {
+    if (!deletedToast) return;
+    if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
+    restoreTask(deletedToast);
+    setDeletedToast(null);
   }
 
   return (
@@ -250,14 +268,17 @@ export default function TaskDetailPage() {
         <button
           type="button"
           onClick={handleDeleteClick}
-          className={`flex min-h-11 items-center justify-center gap-2 rounded-md text-sm font-medium text-rose-500 active:scale-95 ${
+          disabled={!!deletedToast}
+          className={`flex min-h-11 items-center justify-center gap-2 rounded-md text-sm font-medium text-rose-500 active:scale-95 disabled:opacity-40 ${
             task.status === "done" ? "mt-auto" : ""
           }`}
         >
           <TrashIcon />
-          {confirmingDelete ? "Точно видалити?" : "Видалити задачу"}
+          Видалити задачу
         </button>
       </div>
+
+      {deletedToast && <UndoToast message="Задачу видалено" onUndo={handleUndoDelete} />}
     </div>
   );
 }
