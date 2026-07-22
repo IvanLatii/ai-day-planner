@@ -213,11 +213,14 @@ export default function TaskDetailPage() {
         <div className="space-y-3 border-t border-zinc-100 pt-4 dark:border-zinc-800">
           <div className="text-xs text-zinc-500">
             Пріоритет
-            <div className="mt-1">
-              <PriorityField
-                priority={task.priority}
-                onClick={() => cyclePriority(task.id)}
-              />
+            <div className="mt-1 flex gap-4">
+              <div className="min-w-0 flex-1">
+                <PriorityField
+                  priority={task.priority}
+                  onClick={() => cyclePriority(task.id)}
+                />
+              </div>
+              <div className="flex-1" />
             </div>
           </div>
           <div className="flex gap-4">
