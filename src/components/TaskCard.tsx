@@ -138,7 +138,7 @@ function TaskMeta({ task }: { task: Task }) {
         </span>
       )}
       {task.time_estimate_min && (
-        <span className="flex items-center gap-1">
+        <span className="flex items-center gap-1 text-zinc-500 dark:text-zinc-400">
           <ClockIcon />
           {formatTimeEstimate(task.time_estimate_min)}
         </span>
@@ -148,7 +148,7 @@ function TaskMeta({ task }: { task: Task }) {
           key={tag}
           className="rounded bg-zinc-100 px-1.5 py-0.5 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
         >
-          #{tag}
+          {tag}
         </span>
       ))}
       {hiddenTagCount > 0 && <span>+{hiddenTagCount}</span>}
