@@ -69,7 +69,7 @@ function SortModeToggle({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex h-11 w-[132px] items-center justify-between rounded-md bg-zinc-100 px-3 text-xs font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+        className="flex h-11 w-[132px] items-center justify-between rounded-md bg-zinc-100 pl-4 pr-3 text-xs font-medium text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
       >
         {SORT_LABEL[mode]}
         <ChevronDownIcon />
