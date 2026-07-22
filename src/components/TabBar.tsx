@@ -49,13 +49,13 @@ export function TabBar() {
     <nav className="fixed inset-x-0 bottom-0 z-10 border-t border-zinc-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
       <div className="app-column flex">
         <TabLink
-          href="/inbox"
+          href="/"
           label="Вхідні"
           icon={<InboxIcon />}
-          active={pathname === "/inbox"}
+          active={pathname === "/"}
           badge={inboxTasks.length}
         />
-        <TabLink href="/" label="Сьогодні" icon={<TodayIcon />} active={pathname === "/"} />
+        <TabLink href="/today" label="Сьогодні" icon={<TodayIcon />} active={pathname === "/today"} />
       </div>
     </nav>
   );

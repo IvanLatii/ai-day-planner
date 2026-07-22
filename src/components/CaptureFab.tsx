@@ -22,7 +22,7 @@ export function CaptureFab() {
 
   if (pathname === "/capture" || pathname.startsWith("/task/")) return null;
   // Inbox-with-tasks renders its own stacked FAB above the confirm button instead.
-  if (pathname === "/inbox" && inboxTasks.length > 0) return null;
+  if (pathname === "/" && inboxTasks.length > 0) return null;
 
   return (
     <div className="app-column pointer-events-none fixed inset-x-0 bottom-[calc(68px+env(safe-area-inset-bottom))] z-10 flex justify-end px-6">

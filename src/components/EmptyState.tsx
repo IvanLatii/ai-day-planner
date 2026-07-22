@@ -35,7 +35,7 @@ const CONTENT: Record<
     title: "Задачі чекають у Вхідних",
     body: "Переглянь і підтверди — вони стануть планом на сьогодні.",
     ctaLabel: "Перейти у Вхідні",
-    ctaHref: "/inbox",
+    ctaHref: "/",
   },
   "inbox-empty": {
     icon: <InboxIcon className="h-8 w-8" />,

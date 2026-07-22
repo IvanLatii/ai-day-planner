@@ -149,9 +149,9 @@ export default function TaskDetailPage() {
 
   function handleDeleteClick() {
     if (!task) return;
-    // Return to wherever this task came from, not always "/" — deleting
+    // Return to wherever this task came from, not always "/today" — deleting
     // from Вхідні should land back on Вхідні, not bounce to Сьогодні.
-    const originHref = task.status === "inbox" ? "/inbox" : "/";
+    const originHref = task.status === "inbox" ? "/" : "/today";
     setDeletedToast(task);
     deleteTask(task.id);
     toastTimerRef.current = window.setTimeout(() => {
@@ -280,7 +280,7 @@ export default function TaskDetailPage() {
             type="button"
             onClick={() => {
               moveToToday(task.id);
-              router.push("/");
+              router.push("/today");
             }}
             className={OUTLINE_BUTTON_CLASS}
           >

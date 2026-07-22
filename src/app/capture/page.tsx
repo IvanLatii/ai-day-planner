@@ -162,7 +162,7 @@ export default function CapturePage() {
     if (result.ok) {
       setText("");
       setStatus("idle");
-      router.push("/inbox");
+      router.push("/");
     } else {
       setStatus("error");
       setError(errorMessage(result.reason));
