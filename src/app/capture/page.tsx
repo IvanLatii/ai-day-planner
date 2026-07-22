@@ -296,7 +296,7 @@ export default function CapturePage() {
         <button
           type="button"
           disabled
-          className={`${PRIMARY_BUTTON_CLASS} opacity-60`}
+          className={`${PRIMARY_BUTTON_CLASS} mt-4 opacity-60`}
         >
           Записую
         </button>
@@ -304,7 +304,7 @@ export default function CapturePage() {
         <button
           type="button"
           onClick={handleStartRecording}
-          className={PRIMARY_BUTTON_CLASS}
+          className={`${PRIMARY_BUTTON_CLASS} mt-4`}
         >
           <MicIcon />
           Записати задачі
@@ -313,7 +313,7 @@ export default function CapturePage() {
         <button
           type="button"
           onClick={handleSubmitClick}
-          className={`${PRIMARY_BUTTON_CLASS} ${shake ? "animate-shake" : ""}`}
+          className={`${PRIMARY_BUTTON_CLASS} mt-4 ${shake ? "animate-shake" : ""}`}
         >
           {status === "loading" ? (
             <>
