@@ -56,9 +56,9 @@ export function PriorityChip({
   );
 }
 
-// Detail-screen variant: left-aligned with the rest of the fields
-// (Дедлайн/Хвилин), not centered in a 44×44 tap-target box like the
-// list chip — that box is correct for InboxTaskCard, wrong here.
+// Detail-screen variant: same width as one field in the Дедлайн/Хвилин
+// row (wrapped by the caller), not centered in a 44×44 tap-target box
+// like the list chip — that box is correct for InboxTaskCard, wrong here.
 export function PriorityField({
   priority,
   onClick,
@@ -70,7 +70,7 @@ export function PriorityField({
     <button
       type="button"
       onClick={onClick}
-      className={`flex h-11 w-full items-center justify-start rounded-lg px-3 text-sm font-medium transition-colors active:scale-95 ${STYLE[priority]}`}
+      className={`flex h-11 w-full items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors active:scale-95 ${STYLE[priority]}`}
     >
       {DETAIL_LABEL[priority]}
     </button>
