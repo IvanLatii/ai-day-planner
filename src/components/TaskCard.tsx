@@ -196,9 +196,11 @@ export function InboxTaskCard({
             onMove?.(task);
           }}
           aria-label="Перенести у Сьогодні"
-          className="flex min-h-11 min-w-11 shrink-0 items-center justify-center text-zinc-400 active:scale-95 dark:text-zinc-500"
+          className="flex min-h-11 min-w-11 shrink-0 items-center justify-center active:scale-95"
         >
-          <MoveToTodayIcon />
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
+            <MoveToTodayIcon />
+          </span>
         </button>
         <PriorityChip priority={task.priority} onClick={() => cyclePriority(task.id)} />
       </div>
