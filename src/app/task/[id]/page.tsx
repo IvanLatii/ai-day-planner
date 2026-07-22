@@ -186,7 +186,7 @@ export default function TaskDetailPage() {
                 type="button"
                 onClick={() => toggleDone(task.id)}
                 aria-label={isDone ? "Скасувати виконання" : "Позначити виконаною"}
-                className="-mr-2 -my-[3px] flex min-w-11 shrink-0 items-center justify-center py-[3px]"
+                className="-mr-2 -mt-[1px] -mb-[3px] flex min-w-11 shrink-0 items-center justify-center py-[3px]"
               >
                 <span className="flex h-[38px] items-center justify-center">
                   <span
