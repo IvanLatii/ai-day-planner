@@ -292,15 +292,7 @@ export default function CapturePage() {
         </div>
       )}
 
-      {listening ? (
-        <button
-          type="button"
-          disabled
-          className={`${PRIMARY_BUTTON_CLASS} mt-4 opacity-60`}
-        >
-          Записую
-        </button>
-      ) : showMergedMicButton ? (
+      {listening ? null : showMergedMicButton ? (
         <button
           type="button"
           onClick={handleStartRecording}
