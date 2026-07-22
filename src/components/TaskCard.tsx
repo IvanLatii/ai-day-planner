@@ -231,7 +231,7 @@ export function TodayTaskCard({
         <span
           className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${
             isDone
-              ? "border-zinc-900 bg-zinc-900 dark:border-zinc-50 dark:bg-zinc-50"
+              ? "border-zinc-300 bg-zinc-300 dark:border-zinc-600 dark:bg-zinc-600"
               : PRIORITY_CHECKBOX_BORDER[task.priority]
           }`}
         >
