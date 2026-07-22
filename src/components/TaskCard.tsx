@@ -64,9 +64,9 @@ export function TagEditor({
       {tags.map((tag) => (
         <span
           key={tag}
-          className="flex h-8 items-center gap-1 rounded-full border border-zinc-400 bg-zinc-100 pl-3 pr-1.5 text-xs text-zinc-800 dark:border-zinc-500 dark:bg-zinc-800 dark:text-zinc-200"
+          className="flex h-8 items-center gap-1 rounded-full border border-zinc-400 bg-transparent pl-3 pr-1.5 text-xs text-zinc-800 dark:border-zinc-500 dark:text-zinc-200"
         >
-          #{tag}
+          {tag}
           <button
             type="button"
             onClick={() => remove(tag)}
