@@ -174,11 +174,11 @@ export default function TodayPage() {
 
   if (todayTasks.length === 0) {
     return (
-      <>
+      <div className="flex flex-1 flex-col">
         <EmptyState variant={inboxTasks.length > 0 ? "today-has-inbox" : "today-new"} />
-        {doneSection && <div className="px-6 pb-6">{doneSection}</div>}
+        {doneSection && <div className="mt-auto px-6 pb-6">{doneSection}</div>}
         {doneToast && <UndoToast message="Виконано" onUndo={handleUndo} />}
-      </>
+      </div>
     );
   }
 

@@ -50,7 +50,7 @@ const CONTENT: Record<
 export function EmptyState({ variant }: { variant: Variant }) {
   const { icon, accent, title, body, ctaLabel, ctaHref } = CONTENT[variant];
   return (
-    <div className="flex flex-1 flex-col items-center justify-start px-8 pb-16 pt-32 text-center">
+    <div className="flex flex-1 flex-col items-center justify-center px-8 pb-16 text-center">
       <div
         className={`mb-3 flex h-20 w-20 items-center justify-center rounded-full ${ACCENT_STYLE[accent]}`}
       >
