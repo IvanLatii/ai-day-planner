@@ -179,7 +179,7 @@ export function InboxTaskCard({
               перевір руками
             </span>
           )}
-          <div className="font-medium text-zinc-900 dark:text-zinc-50">
+          <div className="line-clamp-2 font-normal leading-snug text-zinc-900 dark:text-zinc-50">
             {capitalize(task.title)}
           </div>
           {task.unparsed && task.source_text && task.source_text !== task.title && (
@@ -247,7 +247,7 @@ export function TodayTaskCard({
         className="min-w-0 flex-1 text-left"
       >
         <p
-          className={`truncate font-medium ${
+          className={`line-clamp-2 font-normal leading-snug ${
             isDone
               ? "text-zinc-400 line-through dark:text-zinc-500"
               : "text-zinc-900 dark:text-zinc-50"
