@@ -80,7 +80,7 @@ export default function InboxPage() {
           type="button"
           onClick={handleClearInbox}
           aria-label="Очистити Вхідні"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-600 active:scale-95 dark:bg-zinc-800 dark:text-zinc-300"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-500 active:scale-95 dark:bg-zinc-800 dark:text-zinc-400"
         >
           <TrashIcon />
         </button>

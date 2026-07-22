@@ -198,7 +198,7 @@ export function InboxTaskCard({
           aria-label="Перенести у Сьогодні"
           className="flex min-h-11 w-8 shrink-0 items-center justify-center active:scale-95"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
             <MoveToTodayIcon />
           </span>
         </button>
