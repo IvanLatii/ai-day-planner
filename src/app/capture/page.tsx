@@ -7,9 +7,9 @@ import { useVoiceDictation } from "@/lib/voice/useVoiceDictation";
 import { PAGE_HEADING_CLASS, PRIMARY_BUTTON_CLASS } from "@/lib/ui";
 
 const ERROR_MESSAGES: Record<string, string> = {
-  missing_api_key: "AI тимчасово недоступний (немає ключа). Спробуй пізніше.",
-  network_error: "Немає з'єднання з AI. Перевір інтернет і спробуй ще раз.",
-  empty_response: "AI не відповів. Спробуй ще раз.",
+  missing_api_key: "ШІ тимчасово недоступний (немає ключа). Спробуй пізніше.",
+  network_error: "Немає з'єднання з ШІ. Перевір інтернет і спробуй ще раз.",
+  empty_response: "ШІ не відповів. Спробуй ще раз.",
 };
 
 function errorMessage(reason: string): string {

@@ -25,7 +25,7 @@ const alumniSans = Alumni_Sans({
 export const metadata: Metadata = {
   title: "Prism",
   description:
-    "Вивали все, що в голові — AI розбере на задачі та план на сьогодні.",
+    "Вивали все, що в голові — ШІ розбере на задачі та план на сьогодні.",
 };
 
 export default function RootLayout({
