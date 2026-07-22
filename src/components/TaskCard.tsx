@@ -64,7 +64,7 @@ export function TagEditor({
       {tags.map((tag) => (
         <span
           key={tag}
-          className="flex h-8 items-center gap-1 rounded-full bg-zinc-100 pl-3 pr-1.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+          className="flex h-8 items-center gap-1 rounded-full border border-zinc-400 bg-zinc-100 pl-3 pr-1.5 text-xs text-zinc-800 dark:border-zinc-500 dark:bg-zinc-800 dark:text-zinc-200"
         >
           #{tag}
           <button
@@ -102,7 +102,7 @@ export function TagEditor({
           type="button"
           onClick={() => setAdding(true)}
           aria-label="Додати тег"
-          className="flex h-8 min-w-8 items-center justify-center rounded-full bg-zinc-100 px-3 text-sm font-medium text-zinc-500 active:scale-95 dark:bg-zinc-800 dark:text-zinc-400"
+          className="flex h-8 min-w-8 items-center justify-center rounded-full bg-zinc-100 px-3 text-sm font-medium text-zinc-400 active:scale-95 dark:bg-zinc-800 dark:text-zinc-500"
         >
           +
         </button>
