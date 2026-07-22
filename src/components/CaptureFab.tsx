@@ -4,14 +4,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTasks } from "@/lib/tasks/useTasks";
 
+function PlusIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="h-6 w-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14" />
+    </svg>
+  );
+}
+
 export function CaptureFabButton({ className = "" }: { className?: string }) {
   return (
     <Link
       href="/capture"
       aria-label="Записати задачі"
-      className={`pointer-events-auto flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full bg-zinc-900 text-3xl leading-none text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900 ${className}`}
+      className={`pointer-events-auto flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full bg-zinc-900 text-white shadow-lg dark:bg-zinc-50 dark:text-zinc-900 ${className}`}
     >
-      +
+      <PlusIcon />
     </Link>
   );
 }
