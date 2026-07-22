@@ -152,7 +152,7 @@ export default function TodayPage() {
   // same trap as R4 §5's toast: an early empty-state return that doesn't
   // know about state introduced after it).
   const doneSection = doneTasks.length > 0 && (
-    <div className="flex flex-col">
+    <div className="mt-4 flex flex-col border-t border-zinc-100 pt-4 dark:border-zinc-800">
       <button
         type="button"
         onClick={handleToggleDoneSection}
