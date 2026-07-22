@@ -4,10 +4,10 @@ export const PAGE_HEADING_CLASS =
   "font-heading text-[46px] leading-[1] font-bold text-zinc-900 dark:text-zinc-50";
 
 // Task-detail title: default Geist (not the Alumni Sans heading font),
-// sized independently of PAGE_HEADING_CLASS — 34px is a compromise between
-// 2x the Today card title (16px) and page-heading−30% (54px → 38px).
+// sized independently of PAGE_HEADING_CLASS — R8 §4 cut the R6 34px
+// compromise by 20% (too massive on phone).
 export const DETAIL_TITLE_CLASS =
-  "font-sans text-[34px] font-semibold leading-[1.1] text-zinc-900 dark:text-zinc-50";
+  "font-sans text-[27px] font-semibold leading-[1.1] text-zinc-900 dark:text-zinc-50";
 
 // EmptyState-only heading, 15% smaller than PAGE_HEADING_CLASS (46 → 39px).
 // Kept separate rather than shrinking the shared class — empty-state

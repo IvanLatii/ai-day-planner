@@ -188,7 +188,7 @@ export default function TaskDetailPage() {
                 aria-label={isDone ? "Скасувати виконання" : "Позначити виконаною"}
                 className="-mr-2 -mt-[1px] -mb-[3px] flex min-w-11 shrink-0 items-center justify-center py-[3px]"
               >
-                <span className="flex h-[38px] items-center justify-center">
+                <span className="flex h-[30px] items-center justify-center">
                   <span
                     className={`flex h-7 w-7 items-center justify-center rounded-full border-2 ${
                       isDone
